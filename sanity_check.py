@@ -49,7 +49,7 @@ def question_1a_sanity_check():
     """ Sanity check for words2charindices function.
     """
     print("-" * 80)
-    print("Running Sanity Check for Question 1e: words2charindices()")
+    print("Running Sanity Check for Question 1a: words2charindices()")
     print("-" * 80)
     vocab = VocabEntry()
 
@@ -75,7 +75,7 @@ def question_1a_sanity_check():
     assert (tgt_ind == tgt_ind_gold), "target vocab test resulted in indices list {:}, expected {:}".format(tgt_ind,
                                                                                                             tgt_ind_gold)
 
-    print("All Sanity Checks Passed for Question 1e: words2charindices()!")
+    print("All Sanity Checks Passed for Question 1a: words2charindices()!")
     print("-" * 80)
 
 
@@ -83,7 +83,7 @@ def question_1b_sanity_check():
     """ Sanity check for pad_sents_char() function.
     """
     print("-" * 80)
-    print("Running Sanity Check for Question 1f: Padding")
+    print("Running Sanity Check for Question 1b: Padding")
     print("-" * 80)
     vocab = VocabEntry()
 
@@ -97,7 +97,7 @@ def question_1b_sanity_check():
     assert padded_sentences == gold_padded_sentences, "Sentence padding is incorrect: it should be:\n {} but is:\n{}".format(
         gold_padded_sentences, padded_sentences)
 
-    print("Sanity Check Passed for Question 1f: Padding!")
+    print("Sanity Check Passed for Question 1b: Padding!")
     print("-" * 80)
 
 
@@ -106,7 +106,7 @@ def question_1f_sanity_check(model):
         basic shape check
     """
     print("-" * 80)
-    print("Running Sanity Check for Question 1j: Model Embedding")
+    print("Running Sanity Check for Question 1f: Model Embedding")
     print("-" * 80)
     sentence_length = 10
     max_word_length = 21
@@ -117,7 +117,7 @@ def question_1f_sanity_check(model):
     assert (list(
         output.size()) == output_expected_size), "output shape is incorrect: it should be:\n {} but is:\n{}".format(
         output_expected_size, list(output.size()))
-    print("Sanity Check Passed for Question 1j: Model Embedding!")
+    print("Sanity Check Passed for Question 1f: Model Embedding!")
     print("-" * 80)
 
 
@@ -242,11 +242,11 @@ def main():
         char_embedding_size=EMBED_SIZE,
         target_vocab=char_vocab)
 
-    if args['1e']:
+    if args['1a']:
         question_1a_sanity_check()
-    elif args['1f']:
+    elif args['1b']:
         question_1b_sanity_check()
-    elif args['1j']:
+    elif args['1f']:
         question_1f_sanity_check(model)
     elif args['2a']:
         question_2a_sanity_check(decoder, char_vocab)
