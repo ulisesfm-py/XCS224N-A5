@@ -71,7 +71,7 @@ def question_1a_sanity_check():
         ['<s>', 'It', 'suggests', 'that', 'we', 'care', 'about', 'the', 'fight,', 'about', 'the', 'challenge.', '</s>'],
         ['<s>', 'A', 'lot', 'of', 'numbers', 'there.', 'A', 'lot', 'of', 'numbers.', '</s>']]
     tgt_ind = vocab.words2charindices(tgt_sents)
-    tgt_ind_gold = pickle.load(open('./sanity_check_en_es_data/1e_tgt.pkl', 'rb'))
+    tgt_ind_gold = pickle.load(open('./sanity_check_en_es_data/1a_tgt.pkl', 'rb'))
     assert (tgt_ind == tgt_ind_gold), "target vocab test resulted in indices list {:}, expected {:}".format(tgt_ind,
                                                                                                             tgt_ind_gold)
 
