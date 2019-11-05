@@ -30,7 +30,7 @@ class ModelEmbeddings(nn.Module):
         # self.embeddings = nn.Embedding(len(vocab.src), embed_size, padding_idx=pad_token_idx)
         ## End A4 code
 
-        ### YOUR CODE HERE for part 1j
+        ### YOUR CODE HERE for part 1f
 
 
         ### END YOUR CODE
@@ -49,7 +49,7 @@ class ModelEmbeddings(nn.Module):
         # return output
         ## End A4 code
 
-        ### YOUR CODE HERE for part 1j
+        ### YOUR CODE HERE for part 1f
 
 
         ### END YOUR CODE

@@ -35,7 +35,7 @@ class CharDecoder(nn.Module):
         @param input: tensor of integers, shape (length, batch)
         @param dec_hidden: internal state of the LSTM before reading the input characters. A tuple of two tensors of shape (1, batch, hidden_size)
 
-        @returns scores: called s_t in the PDF, shape (length, batch, self.vocab_size)
+        @returns scores: called s in the PDF, shape (length, batch, self.vocab_size)
         @returns dec_hidden: internal state of the LSTM after reading the input characters. A tuple of two tensors of shape (1, batch, hidden_size)
         """
         ### YOUR CODE HERE for part 2b
@@ -51,7 +51,7 @@ class CharDecoder(nn.Module):
         @param char_sequence: tensor of integers, shape (length, batch). Note that "length" here and in forward() need not be the same.
         @param dec_hidden: initial internal state of the LSTM, obtained from the output of the word-level decoder. A tuple of two tensors of shape (1, batch, hidden_size)
 
-        @returns The cross-entropy loss, computed as the *sum* of cross-entropy losses of all the words in the batch.
+        @returns The cross-entropy loss, computed as the *sum* of cross-entropy losses of all the words in the batch, for every character in the sequence.
         """
         ### YOUR CODE HERE for part 2c
         ### TODO - Implement training forward pass.

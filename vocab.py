@@ -114,7 +114,7 @@ class VocabEntry(object):
         @param sents (list[list[str]]): sentence(s) in words
         @return word_ids (list[list[list[int]]]): sentence(s) in indices
         """
-        ### YOUR CODE HERE for part 1e
+        ### YOUR CODE HERE for part 1a
         ### TODO: 
         ###     This method should convert characters in the input sentences into their 
         ###     corresponding character indices using the character vocabulary char2id 
@@ -149,7 +149,7 @@ class VocabEntry(object):
 
         @returns sents_var: tensor of (max_sentence_length, batch_size, max_word_length)
         """
-        ### YOUR CODE HERE for part 1g
+        ### YOUR CODE HERE for part 1c
         ### TODO: 
         ###     Connect `words2charindices()` and `pad_sents_char()` which you've defined in 
         ###     previous parts

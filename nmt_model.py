@@ -81,7 +81,7 @@ class NMT(nn.Module):
         # combined_outputs = self.decode(enc_hiddens, enc_masks, dec_init_state, target_padded)
         ## End A4 code
         
-        ### YOUR CODE HERE for part 1k
+        ### YOUR CODE HERE for part 1g
         ### TODO: 
         ###     Modify the code lines above as needed to fetch the character-level tensor 
         ###     to feed into encode() and decode(). You should:

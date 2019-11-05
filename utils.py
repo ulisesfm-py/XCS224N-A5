@@ -23,7 +23,7 @@ def pad_sents_char(sents, char_pad_token):
     # Words longer than 21 characters should be truncated
     max_word_length = 21 
 
-    ### YOUR CODE HERE for part 1f
+    ### YOUR CODE HERE for part 1b
     ### TODO:
     ###     Perform necessary padding to the sentences in the batch similar to the pad_sents() 
     ###     method below using the padding character from the arguments. You should ensure all 
