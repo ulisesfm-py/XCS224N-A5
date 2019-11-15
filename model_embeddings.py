@@ -3,20 +3,22 @@
 
 import torch.nn as nn
 
+
 # Do not change these imports; your module names should be
 #   `CNN` in the file `cnn.py`
 #   `Highway` in the file `highway.py`
-# Uncomment the following two imports once you're ready to run part 1(j)
+# Uncomment the following two imports once you're ready to run part 1(f)
 
 # from cnn import CNN
 # from highway import Highway
 
 # End "do not change" 
 
-class ModelEmbeddings(nn.Module): 
+class ModelEmbeddings(nn.Module):
     """
     Class that converts input words to their CNN-based embeddings.
     """
+
     def __init__(self, embed_size, vocab):
         """
         Init the Embedding layer for one language
@@ -31,7 +33,6 @@ class ModelEmbeddings(nn.Module):
         ## End A4 code
 
         ### YOUR CODE HERE for part 1f
-
 
         ### END YOUR CODE
 
@@ -51,6 +52,4 @@ class ModelEmbeddings(nn.Module):
 
         ### YOUR CODE HERE for part 1f
 
-
         ### END YOUR CODE
-
