@@ -3,11 +3,11 @@ channels:
   - soumith
   - defaults
 dependencies:
-  - pytorch=1.0.0
-  - python=3.5
-  - numpy=1.15.2
-  - scipy=1.1.0
-  - tqdm=4.19.9
+  - python=3.6
+  - numpy=1.18.1
+  - scipy=1.3.2
+  - tqdm=4.41.1
   - docopt=0.6.2
-  - nltk=3.3
-  - torchvision=0.2.2
+  - pytorch=1.4.0
+  - nltk=3.4.5
+  - torchvision=0.5.0

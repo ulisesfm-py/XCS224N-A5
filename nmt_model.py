@@ -221,7 +221,7 @@ class NMT(nn.Module):
 
         # Set e_t to -inf where enc_masks has 1
         if enc_masks is not None:
-            e_t.data.masked_fill_(enc_masks.byte(), -float('inf'))
+            e_t.data.masked_fill_(enc_masks.bool(), -float('inf'))
 
         alpha_t = F.softmax(e_t, dim=-1)
         alpha_t_view = (alpha_t.size(0), 1, alpha_t.size(1))
