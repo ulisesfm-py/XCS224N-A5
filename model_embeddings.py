@@ -36,10 +36,10 @@ class ModelEmbeddings(nn.Module):
 
         ### END YOUR CODE
 
-    def forward(self, input):
+    def forward(self, input_tensor):
         """
         Looks up character-based CNN embeddings for the words in a batch of sentences.
-        @param input: Tensor of integers of shape (sentence_length, batch_size, max_word_length) where
+        @param input_tensor: Tensor of integers of shape (sentence_length, batch_size, max_word_length) where
             each integer is an index into the character vocabulary
 
         @param output: Tensor of shape (sentence_length, batch_size, embed_size), containing the 
