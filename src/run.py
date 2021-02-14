@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 
 """
+
 Usage:
     run.py train --train-src=<file> --train-tgt=<file> --dev-src=<file> --dev-tgt=<file> --vocab=<file> [options]
     run.py decode [options] MODEL_PATH TEST_SOURCE_FILE OUTPUT_FILE
     run.py decode [options] MODEL_PATH TEST_SOURCE_FILE TEST_TARGET_FILE OUTPUT_FILE
+    run.py vocab --train-src=<file> --train-tgt=<file> [options] VOCAB_FILE
 
 Options:
     -h --help                               show this screen.
@@ -35,21 +37,21 @@ Options:
     --dropout=<float>                       dropout [default: 0.3]
     --max-decoding-time-step=<int>          maximum number of decoding time steps [default: 70]
     --no-char-decoder                       do not use the character decoder
+    --size=<int>                            vocab size [default: 50000]
+    --freq-cutoff=<int>                     frequency cutoff [default: 2]
 """
 import math
 import sys
 import pickle
 import time
 
-
 from docopt import docopt
 from nltk.translate.bleu_score import corpus_bleu, sentence_bleu, SmoothingFunction
-from nmt_model import Hypothesis, NMT
 import numpy as np
 from typing import List, Tuple, Dict, Set, Union
 from tqdm import tqdm
-from utils import read_corpus, batch_iter
-from vocab import Vocab, VocabEntry
+
+from submission import Hypothesis, NMT, read_corpus, batch_iter, Vocab, VocabEntry
 
 import torch
 import torch.nn.utils
@@ -159,7 +161,7 @@ def train(args: Dict):
 
             batch_size = len(src_sents)
 
-            example_losses = -model(src_sents, tgt_sents) # (batch_size,)
+            example_losses = -model(src_sents, tgt_sents)  # (batch_size,)
             batch_loss = example_losses.sum()
             loss = batch_loss / batch_size
 
@@ -184,10 +186,13 @@ def train(args: Dict):
                 print('epoch %d, iter %d, avg. loss %.2f, avg. ppl %.2f ' \
                       'cum. examples %d, speed %.2f words/sec, time elapsed %.2f sec' % (epoch, train_iter,
                                                                                          report_loss / report_examples,
-                                                                                         math.exp(report_loss / report_tgt_words),
+                                                                                         math.exp(
+                                                                                             report_loss / report_tgt_words),
                                                                                          cum_examples,
-                                                                                         report_tgt_words / (time.time() - train_time),
-                                                                                         time.time() - begin_time), file=sys.stderr)
+                                                                                         report_tgt_words / (
+                                                                                                 time.time() - train_time),
+                                                                                         time.time() - begin_time),
+                      file=sys.stderr)
 
                 train_time = time.time()
                 report_loss = report_tgt_words = report_examples = 0.
@@ -195,9 +200,11 @@ def train(args: Dict):
             # perform validation
             if train_iter % valid_niter == 0:
                 print('epoch %d, iter %d, cum. loss %.2f, cum. ppl %.2f cum. examples %d' % (epoch, train_iter,
-                                                                                         cum_loss / cum_examples,
-                                                                                         np.exp(cum_loss / cum_tgt_words),
-                                                                                         cum_examples), file=sys.stderr)
+                                                                                             cum_loss / cum_examples,
+                                                                                             np.exp(
+                                                                                                 cum_loss / cum_tgt_words),
+                                                                                             cum_examples),
+                      file=sys.stderr)
 
                 cum_loss = cum_examples = cum_tgt_words = 0.
                 valid_num += 1
@@ -205,7 +212,7 @@ def train(args: Dict):
                 print('begin validation ...', file=sys.stderr)
 
                 # compute dev. ppl and bleu
-                dev_ppl = evaluate_ppl(model, dev_data, batch_size=128)   # dev batch size can be a bit larger
+                dev_ppl = evaluate_ppl(model, dev_data, batch_size=128)  # dev batch size can be a bit larger
                 valid_metric = -dev_ppl
 
                 print('validation: iter %d, dev. ppl %f' % (train_iter, dev_ppl), file=sys.stderr)
@@ -290,7 +297,8 @@ def decode(args: Dict[str, str]):
             f.write(hyp_sent + '\n')
 
 
-def beam_search(model: NMT, test_data_src: List[List[str]], beam_size: int, max_decoding_time_step: int) -> List[List[Hypothesis]]:
+def beam_search(model: NMT, test_data_src: List[List[str]], beam_size: int, max_decoding_time_step: int) -> List[
+    List[Hypothesis]]:
     """ Run beam search to construct hypotheses for a list of src-language sentences.
     @param model (NMT): NMT Model
     @param test_data_src (List[List[str]]): List of sentences (words) in source language, from test set.
@@ -304,7 +312,8 @@ def beam_search(model: NMT, test_data_src: List[List[str]], beam_size: int, max_
     hypotheses = []
     with torch.no_grad():
         for src_sent in tqdm(test_data_src, desc='Decoding', file=sys.stdout):
-            example_hyps = model.beam_search(src_sent, beam_size=beam_size, max_decoding_time_step=max_decoding_time_step)
+            example_hyps = model.beam_search(src_sent, beam_size=beam_size,
+                                             max_decoding_time_step=max_decoding_time_step)
 
             hypotheses.append(example_hyps)
 
@@ -313,13 +322,29 @@ def beam_search(model: NMT, test_data_src: List[List[str]], beam_size: int, max_
     return hypotheses
 
 
+def vocab(args: Dict):
+    print('read in source sentences: %s' % args['--train-src'])
+    print('read in target sentences: %s' % args['--train-tgt'])
+
+    src_sents = read_corpus(args['--train-src'], source='src')
+    tgt_sents = read_corpus(args['--train-tgt'], source='tgt')
+
+    vocab = Vocab.build(src_sents, tgt_sents, int(args['--size']), int(args['--freq-cutoff']))
+    print('generated vocabulary, source %d words, target %d words' % (len(vocab.src), len(vocab.tgt)))
+
+    vocab.save(args['VOCAB_FILE'])
+    print('vocabulary saved to %s' % args['VOCAB_FILE'])
+
 def main():
     """ Main func.
     """
     args = docopt(__doc__)
 
     # Check pytorch version
-    assert(torch.__version__ >= "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
+    assert (
+            torch.__version__ >= "1.0.0"), "Please update your installation of PyTorch. " \
+                                           "You have {} and you should have version greater than or equal to 1.0.0" \
+        .format(torch.__version__)
 
     # seed the random number generators
     seed = int(args['--seed'])
@@ -332,6 +357,8 @@ def main():
         train(args)
     elif args['decode']:
         decode(args)
+    elif args['vocab']:
+        vocab(args)
     else:
         raise RuntimeError('invalid run mode')
 

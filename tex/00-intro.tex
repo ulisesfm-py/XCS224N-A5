@@ -1,0 +1,25 @@
+\begin{framed}
+    \noindent
+    Welcome to the last assignment of the course! Assignment 5 is \textbf{coding-heavy} and the complexity of the code itself is similar to the complexity of the code you wrote in Assignment 4.
+    What makes this assignment more difficult is that \textbf{we give you much less help} in writing and debugging that code.
+    In particular, in this assignment:
+    \begin{itemize}
+        \item There is less scaffolding -- instead of filling in functions, sometimes you will implement whole classes, without us telling you what the API should be.
+        \item We do not tell you how many lines of code are needed to solve a problem.
+        \item The local basic tests that we provide are almost all extremely simple (e.g. check output is correct type or shape). \textbf{More likely than not, the first time you write your code there will be bugs that the basic test does not catch. 
+        It is up to you to check your own code, to maximize the chance that your model trains successfully.}
+        You are advised to design and run your own tests, but you should be checking your code throughout.
+        \item The final model (which you train at the end of Part 2) takes around \textbf{8-12} hours to train on the recommended Azure VM (time varies depending on your implementation, and when the training procedure hits the early stopping criterion). Keep this in mind when budgeting your time.
+    \end{itemize}
+\end{framed}  
+    
+This assignment explores two key concepts -- sub-word modeling and convolutional networks -- and applies them to the NMT system we built in the previous assignment. The Assignment 4 NMT model can be thought of as four stages: 
+\begin{enumerate}
+    \item \textbf{Embedding layer:} Converts raw input text (for both the source and target sentences) to a sequence of dense word vectors via lookup.
+    \item \textbf{Encoder:} A RNN that encodes the source sentence as a sequence of encoder hidden states.
+    \item \textbf{Decoder:} A RNN that operates over the target sentence and attends to the encoder hidden states to produce a sequence of decoder hidden states.
+    \item \textbf{Output prediction layer:} A linear layer with softmax that produces a probability distribution for the next target word on each decoder timestep.
+\end{enumerate}
+All four of these subparts model the NMT problem at a word level.
+In Section 1 of this assignment, we will replace it with a character-based convolutional encoder, and in Section 2 we will enhance it by adding a character-based LSTM decoder.
+This will hopefully improve our BLEU performance on the test set!
