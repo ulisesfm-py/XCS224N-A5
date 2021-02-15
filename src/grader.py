@@ -1312,7 +1312,7 @@ class Test_2f(GradedTestCase):
     def test_0(self):
         """2f-0-hidden:  BLEU score above 10"""
         # Read files
-        hyp_file = os.path.join('./outputs', 'test_outputs.txt')
+        hyp_file = os.path.join('./outputs', 'test_outputs_soln.txt')
         ref_file = os.path.join('./en_es_data', 'test.en')
 
         self.assertTrue(os.path.exists(hyp_file),
@@ -1337,7 +1337,7 @@ class Test_2f(GradedTestCase):
     def test_1(self):
         """2f-1-hidden:  BLEU score above 16"""
         # Read files
-        hyp_file = os.path.join('./outputs', 'test_outputs.txt')
+        hyp_file = os.path.join('./outputs', 'test_outputs_soln.txt')
         ref_file = os.path.join('./en_es_data', 'test.en')
 
         self.assertTrue(os.path.exists(hyp_file),
