@@ -91,6 +91,30 @@ The model in Figure \ref{fig:char-emb} has four main stages, which we'll describ
 We're done! $\bx_\text{word\_emb}$ is the embedding we will use to represent word $x$ -- this will replace the lookup-based word embedding we used in Assignment 4.
 \newpage
 
+\subsection*{{\color{red} Setting up your Virtual Machine}}
+You can use the same VM and environment that you set up in A4.  Simply activate the environment like this:
+\begin{lstlisting}
+$ conda activate XCS224N
+\end{lstlisting}
+In case you need to reinstall your environment on a fresh VM, here are the instructions from A4:
+
+Follow the instructions in the \href{https://docs.google.com/document/d/1oy4FLADpCQDYYnO37ryntPV42foOgwtycbP5PMC8a8w}{XCS224N Azure Guide} in order to create your VM instance. Though you will need the GPU to train your model, we strongly advise that you first develop the code locally and ensure that it runs, before attempting to train it on your VM. GPU time is expensive and limited. It takes approximately \textbf{8-12 hours} to train the system. We don't want you to accidentally use all your GPU time for the assignment, debugging your model rather than training and evaluating it. Finally, \textbf{make sure that your VM is turned off whenever you are not using it.}
+
+In order to run the model code on your VM, please run the following command to create the proper virtual environment like this (You did this at the beginning of the course on your local computer):
+
+\begin{lstlisting}
+$ conda env create --file environment.yml
+\end{lstlisting}
+
+Next, you need to install GPU-specific dependencies on your VM.  First, activate the |XCS224N| environment you just created.  Then install the dependencies like this:
+
+\begin{lstlisting}
+$ conda activate XCS224N
+(XCS224N)$ conda install --file gpu_requirements.txt
+\end{lstlisting}
+
+For local development and testing, you can feel free to continue to using the same |XCS224N| environment you've used for all the assignments so far.
+
 \subsection*{Implementation}
 In the remainder of Section \ref{sec:char_enc}, we will be implementing the character-based encoder in our NMT system.
 Though you could implement this on top of your own Assignment 4 solution code, for simplicity and fairness we have supplied you\footnote{available on Stanford Box; requires Stanford login} with a full implementation of the Assignment 4 word-based NMT model (with some modifications); this is what you will use as a basis for your Assignment 5 code. 
@@ -105,22 +129,15 @@ Run the following to create the correct vocab files:
 Let's implement the entire network specified in Figure \ref{fig:char-emb}, from left to right.
 
 \begin{enumerate}[(a)]
-    \item \points{1a} In \texttt{vocab.py}, implement the method \texttt{words2charindices()} (hint: copy the structure of \texttt{words2indices()}) to convert each character to its corresponding index in the character-vocabulary. This corresponds to the first two steps of Figure \ref{fig:char-emb} (splitting and vocab lookup). Run the following for a non-exhaustive sanity check:
-    \begin{center}
-        \texttt{python sanity\_check.py 1a}
-    \end{center}
+    \item \points{1a} In \texttt{src/submission/vocab.py}, implement the method \texttt{words2charindices()} (hint: copy the structure of \texttt{words2indices()}) to convert each character to its corresponding index in the character-vocabulary. This corresponds to the first two steps of Figure \ref{fig:char-emb} (splitting and vocab lookup).
 
-    \item \points{1b} Implement \texttt{pad\_sents\_char()} in \texttt{utils.py}, similar to the version for words. This method should pad at the character and word level. 
+    \item \points{1b} Implement \texttt{pad\_sents\_char()} in \texttt{src/submission/utils.py}, similar to the version for words. This method should pad at the character and word level. 
     All words should be padded/truncated to max word length $m_\text{word}=21$, and all sentences should be padded to the length of the longest sentence in the batch.
     A padding word is represented by $m_\text{word}$ \texttt{<PAD>}-characters.
-    Run the following for a non-exhaustive sanity check:
-    \begin{center}
-        \texttt{python sanity\_check.py 1b}
-    \end{center}
 
-    \item \points{1c} Implement \texttt{to\_input\_tensor\_char()} in \texttt{vocab.py} to connect the previous two parts: use both methods created in the previous steps and convert the resulting padded sentences to a torch tensor. \textbf{Ensure you reshape the dimensions} so that the output has shape: (\texttt{max\_sentence\_length}, \texttt{batch\_size}, \texttt{max\_word\_length}) so that we don't have any shape errors downstream! 
+    \item \points{1c} Implement \texttt{to\_input\_tensor\_char()} in \texttt{src/submission/vocab.py} to connect the previous two parts: use both methods created in the previous steps and convert the resulting padded sentences to a torch tensor. \textbf{Ensure you reshape the dimensions} so that the output has shape: (\texttt{max\_sentence\_length}, \texttt{batch\_size}, \texttt{max\_word\_length}) so that we don't have any shape errors downstream! 
 
-    \item \label{qn:highway} In the empty file \texttt{highway.py}, implement the highway network as a \texttt{nn.Module} class called \texttt{Highway}.\footnote{If you're unsure how to structure a \texttt{nn.Module}, you can start here: \url{https://pytorch.org/tutorials/beginner/examples_nn/two_layer_net_module.html}. After that, you could look at the many examples of \texttt{nn.Modules} in Assignments 3 and 4.} 
+    \item \label{qn:highway} In the empty file \texttt{src/submission/highway.py}, implement the highway network as a \texttt{nn.Module} class called \texttt{Highway}.\footnote{If you're unsure how to structure a \texttt{nn.Module}, you can start here: \url{https://pytorch.org/tutorials/beginner/examples_nn/two_layer_net_module.html}. After that, you could look at the many examples of \texttt{nn.Modules} in Assignments 3 and 4.} 
     \begin{itemize}
         \item Your module will need a \texttt{\_init\_()} and a \texttt{forward()} function (whose inputs and outputs you decide for yourself).
         \item The \texttt{forward()} function will need to map from $\bx_\text{conv\_out}$ to $\bx_\text{highway}$.
@@ -137,11 +154,9 @@ Let's implement the entire network specified in Figure \ref{fig:char-emb}, from 
         \item Similar to previous, but you could instead print all intermediate values and check each is correct.
         \item If you can think of any `edge case' or `unusual' inputs, create test cases based on those.
     \end{itemize}
-    
-    \textit{\textbf{Important}: to avoid crashing the autograder, make sure that any print statements are commented out when you submit your code.}
-    
+        
     \item \label{qn:cnn}
-    In the empty file \texttt{cnn.py}, implement the convolutional network as a \texttt{nn.Module} class called \texttt{CNN}.
+    In the empty file \texttt{src/submission/cnn.py}, implement the convolutional network as a \texttt{nn.Module} class called \texttt{CNN}.
     \begin{itemize}
         \item Your module will need a \texttt{\_init\_()} and a \texttt{forward()} function (whose inputs and outputs you decide for yourself).
         \item The \texttt{forward()} function will need to map from $\bx_\text{reshaped}$ to $\bx_\text{conv\_out}$.
@@ -151,7 +166,7 @@ Let's implement the entire network specified in Figure \ref{fig:char-emb}, from 
     \end{itemize}
 
     \item \points{1f} Write the \texttt{\_\_init\_\_()} and \texttt{forward()} functions for the \texttt{ModelEmbeddings} class in \\
-    \texttt{model\_embeddings.py}.\footnote{Note that in this assignment, the full NMT model defines two \texttt{ModelEmbeddings} objects (one for source and one for target), whereas in Assignment 4, there was a single \texttt{ModelEmbeddings} object that contained two \texttt{nn.Embedding} objects (one for source and one for target).} 
+    \texttt{src/submission/model\_embeddings.py}.\footnote{Note that in this assignment, the full NMT model defines two \texttt{ModelEmbeddings} objects (one for source and one for target), whereas in Assignment 4, there was a single \texttt{ModelEmbeddings} object that contained two \texttt{nn.Embedding} objects (one for source and one for target).} 
     \begin{itemize}
         \item The \texttt{forward()} function must map from $\bx_\text{padded}$ to $\bx_\text{word\_emb}$ -- note this is for whole batches of sentences, rather than batches of words.
         \item You will need to use the \texttt{CNN} and \texttt{Highway} modules you created.
@@ -160,14 +175,11 @@ Let's implement the entire network specified in Figure \ref{fig:char-emb}, from 
         \item Remember that we are using $e_\text{char}=50$.
         \item Depending on your implementation of \texttt{CNN} and \texttt{Highway}, it's likely that you will need to reshape tensors to get them into the shape required by \texttt{CNN} and \texttt{Highway}, and then reshape again to get the final output of \texttt{ModelEmbeddings.forward()}.
     \end{itemize}
-    Sanity check if the output from your model has the correct shape by running the following:
-    \begin{center}
-        \texttt{python sanity\_check.py 1f}
-    \end{center}
+    
     The majority of the 12 points are awarded based on a hidden autograder. Though we don't require it, you should check your implementation using techniques similar to what you did in (\ref{qn:highway}) and (\ref{qn:cnn}), before you do the `small training run' check in (\ref{qn:run_tiny_enc}). 
 
     \item \points{1g}
-    In \texttt{nmt\_model.py}, complete the \texttt{forward()} method to use character-level padded encodings instead of word-level encodings.
+    In \texttt{src/submission/nmt\_model.py}, complete the \texttt{forward()} method to use character-level padded encodings instead of word-level encodings.
     This ties together your \texttt{ModelEmbeddings} code with the preprocessing code you wrote. Check your code!
     
     \item \points{1h} \label{qn:run_tiny_enc} \textbf{On your local machine}, confirm that you're in the proper conda enironment then execute the following command. 
@@ -177,11 +189,8 @@ Let's implement the entire network specified in Figure \ref{fig:char-emb}, from 
 (XCS224N)$ sh run.sh test_local_q1
 \end{lstlisting}
 
-    Running these should take around 5 minutes (but this depends otn your local machine). 
+    Running these should take around 5 minutes (but this depends on your local machine). 
     You should observe the average loss go down to near 0 and average perplexity on train and dev set go to 1 during training. Once you run the test, you should observe BLEU score on the test set higher than 99.00. 
     If you don't observe these things, you probably need to go back to debug!
-    
-    \textit{Important: Make sure not to modify the output file (\texttt{outputs/test\_outputs\_local\_q1.txt}) generated by the code -- you need this to be included when you run the submission script.}
-
 
 \end{enumerate}

@@ -610,10 +610,17 @@ class Test_1g(GradedTestCase):
             self.assertLessEqual(abs(soln_output.numpy() - student_output.numpy()), 0.004)
 
 class Test_1h(GradedTestCase):
-    def setUp(self):
-        # Read files
+    @graded(is_hidden=True)
+    def test_0(self):
+        """1h-0-hidden:  BLEU score on tiny test set is over 99"""
         hyp_file = os.path.join('./outputs', 'test_outputs_local_q1_soln.txt')
         ref_file = os.path.join('./en_es_data', 'test_tiny.en')
+
+        if os.path.exists(os.path.join('./submission', 'test_outputs_local_q1_soln.txt')):
+            hyp_file = os.path.join('./submission', 'test_outputs_local_q1_soln.txt')
+
+        self.assertTrue(os.path.exists(hyp_file),
+                        f'Output test file (outputs/test_outputs_local_q1_soln.txt) does not exist.')
 
         ref = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).read_corpus(ref_file, source='tgt')
         hyp = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).read_corpus(hyp_file, source='tgt')
@@ -624,9 +631,6 @@ class Test_1h(GradedTestCase):
         hyp = [submission.Hypothesis(value=line, score=1) for line in hyp]
         self.ref, self.hyp = ref, hyp
 
-    @graded(is_hidden=True)
-    def test_0(self):
-        """1h-0-hidden:  BLEU score on tiny test set is over 99"""
         score = bleu(self.ref, self.hyp) * 100
         print("BLEU " + str(score))
         self.assertGreaterEqual(score, 99.0, "Your BLEU score ({}) is below 99".format(score))
@@ -1286,10 +1290,18 @@ class Test_2d(GradedTestCase):
             'Passed - receiving credit for correct exact match (all characters of each string in decodedWords match solution)')
 
 class Test_2e(GradedTestCase):
-    def setUp(self):
+    @graded(is_hidden=True)
+    def test_0(self):
+        """2e-0-hidden:  BLEU score on tiny test set is over 99"""
         # Read files
         hyp_file = os.path.join('./outputs', 'test_outputs_local_q2_soln.txt')
         ref_file = os.path.join('./en_es_data', 'test_tiny.en')
+
+        if os.path.exists(os.path.join('./submission', 'test_outputs_local_q2_soln.txt')):
+            hyp_file = os.path.join('./submission', 'test_outputs_local_q2_soln.txt')
+
+        self.assertTrue(os.path.exists(hyp_file),
+                        f'Output test file (outputs/test_outputs_local_q2_soln.txt) does not exist.')
 
         ref = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).read_corpus(ref_file, source='tgt')
         hyp = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).read_corpus(hyp_file, source='tgt')
@@ -1300,9 +1312,6 @@ class Test_2e(GradedTestCase):
         hyp = [submission.Hypothesis(value=line, score=1) for line in hyp]
         self.ref, self.hyp = ref, hyp
 
-    @graded(is_hidden=True)
-    def test_0(self):
-        """2e-0-hidden:  BLEU score on tiny test set is over 99"""
         score = bleu(self.ref, self.hyp) * 100
         print("BLEU " + str(score))
         self.assertGreaterEqual(score, 99.0, "Your BLEU score ({}) is below 99".format(score))
@@ -1315,8 +1324,11 @@ class Test_2f(GradedTestCase):
         hyp_file = os.path.join('./outputs', 'test_outputs_soln.txt')
         ref_file = os.path.join('./en_es_data', 'test.en')
 
+        if os.path.exists(os.path.join('./submission', 'test_outputs_soln.txt')):
+            hyp_file = os.path.join('./submission', 'test_outputs_soln.txt')
+
         self.assertTrue(os.path.exists(hyp_file),
-                        f'Output test file (outputs/test_outputs.txt) does not exist. To generate this file, follow these steps:\n'
+                        f'Output test file (outputs/test_outputs_soln.txt) does not exist. To generate this file, follow these steps:\n'
                         '1. Generate vocab.py (run.sh vocab)\n'
                         '2. Generate and train a model (run.sh train)\n'
                         '3. Generate model outputs on the autograder test set (python envaluation_output.py)')
@@ -1340,11 +1352,14 @@ class Test_2f(GradedTestCase):
         hyp_file = os.path.join('./outputs', 'test_outputs_soln.txt')
         ref_file = os.path.join('./en_es_data', 'test.en')
 
+        if os.path.exists(os.path.join('./submission', 'test_outputs_soln.txt')):
+            hyp_file = os.path.join('./submission', 'test_outputs_soln.txt')
+
         self.assertTrue(os.path.exists(hyp_file),
-                        f'Output test file (outputs/test_outputs.txt) does not exist. To generate this file, follow these steps:\n'
+                        f'Output test file (outputs/test_outputs_soln.txt) does not exist. To generate this file, follow these steps:\n'
                         '1. Generate vocab.py (run.sh vocab)\n'
                         '2. Generate and train a model (run.sh train)\n'
-                        '3. Generate model outputs on the autograder test set (python envaluation_output.py)')
+                        '3. Test the model (sh run.sh test)')
 
         ref = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).read_corpus(ref_file, source='tgt')
         hyp = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).read_corpus(hyp_file, source='tgt')
