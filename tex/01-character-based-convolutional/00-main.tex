@@ -121,7 +121,7 @@ Though you could implement this on top of your own Assignment 4 solution code, f
 
 You will not need to use your VM until Section 2 -- the rest of this section can be done on your local machine.
 
-Let's implement the entire network specified in Figure \ref{fig:char-emb}, from left to right.
+Let's implement the entire network specified in Figure \ref{fig:char-emb}, from left to right. Note that running \texttt{python grader.py} might fail due to missing \texttt{CNN} and \texttt{HighWay} modules until they are implemented.
 
 \begin{enumerate}[(a)]
     \item \points{1a} In \texttt{src/submission/vocab.py}, implement the method \texttt{words2charindices()} (hint: copy the structure of \texttt{words2indices()}) to convert each character to its corresponding index in the character-vocabulary. This corresponds to the first two steps of Figure \ref{fig:char-emb} (splitting and vocab lookup).

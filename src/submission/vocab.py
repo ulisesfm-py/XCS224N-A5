@@ -159,7 +159,7 @@ class VocabEntry(object):
         shorter sentences.
 
         @param sents (List[List[str]]): list of sentences (words)
-        @param device: device on which to load the tesnor, i.e. CPU or GPU
+        @param device: device on which to load the tensor, i.e. CPU or GPU
 
         @returns sents_var: tensor of (max_sentence_length, batch_size)
         """

@@ -1,6 +1,6 @@
 \section{Quiz}
 
-This remainder of this homework is a series of multiple choice questions related to the word2vec algorithm.
+This remainder of this homework is a series of multiple choice questions related to the Character-based NMT with LSTMs.
 
 {\bf How to submit:}  Even though these are not coding questions, you will submit your response to
 each question in the |src-quiz/submission.py| file.  This file will act as
@@ -106,7 +106,7 @@ In the character-based embedding model, instead of using a 1D convnet we could h
 \begin{enumerate}[(a)]
 \item The features computed by the CNNs are position-invariant -- for example if the input word is `couscous', and the kernel size is 4, a feature that's computed over the first `cous' is the same as the same feature that's computed over the second `cous'. By contrast, an RNN would have a different hidden state at the end of the first `cous' and at the end of the second `cous'.
 \item When a 1D convnet computes features for a given window of the input, those features depend on the window only -- not any other inputs to the left or right. By contrast, an RNN needs to compute the hidden states sequentially, from left to right (and also right to left, if the RNN is bidirectional). Therefore, unlike a RNN, a convnet's features can be computed in parallel, which means that convnets are generally faster, especially for long sequences.
-\item Unlike CNNs with long window size, RNNs don't suffer from the vanishing gradient problem and, therefore, can better model the dependency between distant characters in the sequence.w
+\item Unlike CNNs with long window size, RNNs don't suffer from the vanishing gradient problem and, therefore, can better model the dependency between distant characters in the sequence.
 \end{enumerate}
 
 % ### START CODE HERE ###

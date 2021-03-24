@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-CS224N 2018-19: Homework 5
+XCS224N: Homework 5
 """
 
 import math
