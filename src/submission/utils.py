@@ -15,26 +15,26 @@ import torch.nn.functional as F
 
 def pad_sents_char(sents, char_pad_token):
     """ Pad list of sentences according to the longest sentence in the batch and max_word_length.
-    @param sents (list[list[list[int]]]): list of sentences, result of `words2charindices()` 
+    @param sents (list[list[list[int]]]): list of sentences, result of `words2charindices()`
         from `vocab.py`
     @param char_pad_token (int): index of the character-padding token
     @returns sents_padded (list[list[list[int]]]): list of sentences where sentences/words shorter
         than the max length sentence/word are padded out with the appropriate pad token, such that
-        each sentence in the batch now has same number of words and each word has an equal 
+        each sentence in the batch now has same number of words and each word has an equal
         number of characters
         Output shape: (batch_size, max_sentence_length, max_word_length)
     """
     # Words longer than 21 characters should be truncated
-    max_word_length = 21 
+    max_word_length = 21
 
     ### TODO:
-    ###     Perform necessary padding to the sentences in the batch similar to the pad_sents() 
-    ###     method below using the padding character from the arguments. You should ensure all 
-    ###     sentences have the same number of words and each word has the same number of 
-    ###     characters. 
-    ###     Set padding words to a `max_word_length` sized vector of padding characters.  
+    ###     Perform necessary padding to the sentences in the batch similar to the pad_sents()
+    ###     method below using the padding character from the arguments. You should ensure all
+    ###     sentences have the same number of words and each word has the same number of
+    ###     characters.
+    ###     Set padding words to a `max_word_length` sized vector of padding characters.
     ###
-    ###     You should NOT use the method `pad_sents()` below because of the way it handles 
+    ###     You should NOT use the method `pad_sents()` below because of the way it handles
     ###     padding and unknown words.
     ### START CODE HERE for part 1b
     ### END CODE HERE
@@ -67,7 +67,7 @@ def pad_sents(sents, pad_token):
 
 
 def read_corpus(file_path, source):
-    """ Read file, where each sentence is dilineated by a `\n`.
+    """ Read file, where each sentence is delineated by a `\n`.
     @param file_path (str): path to file containing corpus
     @param source (str): "tgt" or "src" indicating whether text
         is of the source language or target language

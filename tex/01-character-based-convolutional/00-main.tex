@@ -47,7 +47,7 @@ The model in Figure \ref{fig:char-emb} has four main stages, which we'll describ
     \end{equation}
     We'll reshape $\bx_\text{emb}$ to obtain $\bx_{\text{reshaped}} \in \Real^{e_\text{char} \times m_\text{word}}$ before feeding into the convolutional network.\footnote{Necessary because the PyTorch Conv1D function performs the convolution only on the \textit{last} dimension of the input.}
     \item \textbf{Convolutional network}.
-    To combine these character embeddings, we'll use 1-dimensional convolutions. The convolutional layer has two hyperparameters:\footnote{We assume no padding is applied and the stride is 1.} the kernel size $k$ (also called window size), which dictates the size of the window used to compute features, and the number of filters $f$ (also called number of output features or number of output channels). 
+        To combine these character embeddings, we'll use 1-dimensional convolutions (the pages from 16 to 25 of this slide\footnote{\url{https://nlp.seas.harvard.edu/slides/aaai16.pdf}} can be helpful to understand 1-d convolutions). The convolutional layer has two hyperparameters:\footnote{We assume no padding is applied and the stride is 1.} the kernel size $k$ (also called window size), which dictates the size of the window used to compute features, and the number of filters $f$ (also called number of output features or number of output channels). 
     The convolutional layer has a weight matrix $\bW \in \Real^{f \times e_\text{char} \times k}$ and a bias vector $\bb \in \Real^f$.
     \newline
     
@@ -98,7 +98,7 @@ $ conda activate XCS224N
 \end{lstlisting}
 In case you need to reinstall your environment on a fresh VM, here are the instructions from A4:
 
-Follow the instructions in the \href{https://docs.google.com/document/d/1oy4FLADpCQDYYnO37ryntPV42foOgwtycbP5PMC8a8w}{XCS224N Azure Guide} in order to create your VM instance. Though you will need the GPU to train your model, we strongly advise that you first develop the code locally and ensure that it runs, before attempting to train it on your VM. GPU time is expensive and limited. It takes approximately \textbf{8-12 hours} to train the system. We don't want you to accidentally use all your GPU time for the assignment, debugging your model rather than training and evaluating it. Finally, \textbf{make sure that your VM is turned off whenever you are not using it.}
+Follow the instructions in the \href{https://docs.google.com/document/d/10J520Vnb1LnAMo0qgSYpG5cEEbomqQ371NIqg1IAv-4/edit?usp=sharing}{XCS224N Azure Guide} in order to create your VM instance. Though you will need the GPU to train your model, we strongly advise that you first develop the code locally and ensure that it runs, before attempting to train it on your VM. GPU time is expensive and limited. It takes approximately \textbf{8-12 hours} to train the system. We don't want you to accidentally use all your GPU time for the assignment, debugging your model rather than training and evaluating it. Finally, \textbf{make sure that your VM is turned off whenever you are not using it.}
 
 In order to run the model code on your VM, please run the following command to create the proper virtual environment like this (You did this at the beginning of the course on your local computer):
 
@@ -117,14 +117,9 @@ For local development and testing, you can feel free to continue to using the sa
 
 \subsection*{Implementation}
 In the remainder of Section \ref{sec:char_enc}, we will be implementing the character-based encoder in our NMT system.
-Though you could implement this on top of your own Assignment 4 solution code, for simplicity and fairness we have supplied you\footnote{available on Stanford Box; requires Stanford login} with a full implementation of the Assignment 4 word-based NMT model (with some modifications); this is what you will use as a basis for your Assignment 5 code. 
+Though you could implement this on top of your own Assignment 4 solution code, for simplicity and fairness we have supplied you\footnote{A4 implementation is included in the A5 starter code} with a full implementation of the Assignment 4 word-based NMT model (with some modifications); this is what you will use as a basis for your Assignment 5 code. 
 
 You will not need to use your VM until Section 2 -- the rest of this section can be done on your local machine.
-
-Run the following to create the correct vocab files:
-\begin{lstlisting}
-(XCS224N)$ sh run.sh vocab
-\end{lstlisting}
 
 Let's implement the entire network specified in Figure \ref{fig:char-emb}, from left to right.
 
@@ -164,6 +159,11 @@ Let's implement the entire network specified in Figure \ref{fig:char-emb}, from 
         \item Make sure that your module uses one \texttt{nn.Conv1d} layer (this is important for the autograder).
         \item Use a kernel size of $k=5$.
     \end{itemize}
+
+Run the following to create the correct vocab files:
+\begin{lstlisting}
+(XCS224N)$ sh run.sh vocab
+\end{lstlisting}
 
     \item \points{1f} Write the \texttt{\_\_init\_\_()} and \texttt{forward()} functions for the \texttt{ModelEmbeddings} class in \\
     \texttt{src/submission/model\_embeddings.py}.\footnote{Note that in this assignment, the full NMT model defines two \texttt{ModelEmbeddings} objects (one for source and one for target), whereas in Assignment 4, there was a single \texttt{ModelEmbeddings} object that contained two \texttt{nn.Embedding} objects (one for source and one for target).} 
