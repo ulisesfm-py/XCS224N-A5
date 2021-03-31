@@ -166,7 +166,7 @@ Run the following to create the correct vocab files:
 \end{lstlisting}
 
     \item \points{1f} Write the \texttt{\_\_init\_\_()} and \texttt{forward()} functions for the \texttt{ModelEmbeddings} class in \\
-    \texttt{src/submission/model\_embeddings.py}.\footnote{Note that in this assignment, the full NMT model defines two \texttt{ModelEmbeddings} objects (one for source and one for target), whereas in Assignment 4, there was a single \texttt{ModelEmbeddings} object that contained two \texttt{nn.Embedding} objects (one for source and one for target).} 
+        \texttt{src/submission/model\_embeddings.py}.\footnote{Note that in this assignment, the full NMT model defines two \texttt{ModelEmbeddings} objects (one for source and one for target), whereas in Assignment 4, there was a single \texttt{ModelEmbeddings} object that contained two \texttt{nn.Embedding} objects (one for source and one for target).} \footnote{Note that \texttt{1f-5-hidden} test will only run on the Gradescope.}
     \begin{itemize}
         \item The \texttt{forward()} function must map from $\bx_\text{padded}$ to $\bx_\text{word\_emb}$ -- note this is for whole batches of sentences, rather than batches of words.
         \item You will need to use the \texttt{CNN} and \texttt{Highway} modules you created.
@@ -174,9 +174,10 @@ Run the following to create the correct vocab files:
         \item Your \texttt{ModelEmbeddings} class should contain one \texttt{nn.Embedding} object (this is important for the autograder).
         \item Remember that we are using $e_\text{char}=50$.
         \item Depending on your implementation of \texttt{CNN} and \texttt{Highway}, it's likely that you will need to reshape tensors to get them into the shape required by \texttt{CNN} and \texttt{Highway}, and then reshape again to get the final output of \texttt{ModelEmbeddings.forward()}.
+        \item Add \texttt{embed\_size} to \texttt{ModelEmbeddings} class' member.
     \end{itemize}
     
-    The majority of the 12 points are awarded based on a hidden autograder. Though we don't require it, you should check your implementation using techniques similar to what you did in (\ref{qn:highway}) and (\ref{qn:cnn}), before you do the `small training run' check in (\ref{qn:run_tiny_enc}). 
+        The majority of the 12 points are awarded based on a hidden autograder. Though we don't require it, you should check your implementation using techniques similar to what you did in (\ref{qn:highway}) and (\ref{qn:cnn}), before you do the `small training run' check in (\ref{qn:run_tiny_enc}). Before running the test for 1f using \texttt{grader.py}, you might want to add a correct \texttt{super()} call to the \texttt{CharDecoder()}; otherwise, \texttt{model.eval()} call in the test code would fail.
 
     \item \points{1g}
     In \texttt{src/submission/nmt\_model.py}, complete the \texttt{forward()} method to use character-level padded encodings instead of word-level encodings.

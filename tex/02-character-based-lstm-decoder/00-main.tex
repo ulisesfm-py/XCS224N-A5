@@ -91,7 +91,7 @@ Finally, \textbf{make sure that your VM is turned off whenever you are not using
     Note that although Algorithm \ref{alg:greedy} is described for a single example, your implementation must work over a batch.
     Algorithm \ref{alg:greedy} also indicates that you should break when you reach the \texttt{<END>} token, but in the batched case you might find it more convenient to complete all \texttt{max\_length} steps of the for-loop, then truncate the \texttt{output\_word}s afterwards.
 
-    \item \points{2e} \label{qn:run_tiny_dec} (coding) Once you have thoroughly checked your implementation of the \texttt{CharDecoder} functions (checking much more than just the basic test sanity checks!), it's time to do the `small training run' check.
+    \item \points{2e} \label{qn:run_tiny_dec} Once you have thoroughly checked your implementation of the \texttt{CharDecoder} functions (checking much more than just the basic test sanity checks!), it's time to do the `small training run' check.
     
     Confirm that you're in the proper conda environment and then execute the following command on your \textbf{local} machine to check if your model overfits to a small subset of the training data.
 \begin{lstlisting}
@@ -99,9 +99,9 @@ Finally, \textbf{make sure that your VM is turned off whenever you are not using
 (XCS224N)$ sh run.sh test_local_q2
 \end{lstlisting}
 
-    Running these should take around 10 minutes (but this depends on your local machine). 
+    Running these should take around 10 minutes (but this depends on your local machine and your implementation). 
     You should observe the average loss go down to near 0 and average perplexity on train and dev set go to 1 during training. Once you run the test, you should observe BLEU score on the test set higher than 99.00. 
-    If you don't observe these things, you probably need to go back to debug!
+    If you don't observe these numbers, then you probably need to go back to debug!
     
     \item \points{2f} \label{qn:final_train} Now that we've implemented both the character-based encoder and the character-based decoder, it's finally time to train the full system!
 
@@ -147,7 +147,7 @@ For this assignment, please submit all files within the |src/submission| subdire
     \item |src/submission/nmt_model.py|
     \item |src/submission/utils.py|
     \item |src/submission/vocab.py|
-    \item |src/outputs/test_outputs_soln.py|
-    \item |src/outputs/test_outputs_soln.py|
-    \item |src/outputs/test_outputs_soln.py|
+    \item |src/outputs/test_outputs_local_q1_soln.txt|
+    \item |src/outputs/test_outputs_local_q2_soln.txt|
+    \item |src/outputs/test_outputs_soln.txt|
 \end{itemize}   
