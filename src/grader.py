@@ -3,6 +3,7 @@ import unittest, random, sys, copy, argparse, inspect
 from graderUtil import graded, CourseTestRunner, GradedTestCase
 import numpy as np
 import os
+import traceback
 
 # Import student submission
 import submission
@@ -277,7 +278,7 @@ class Test_1a(GradedTestCase):
         soln_outputs = soln_vocab.words2charindices(sentences)
         print("Student Output: {}".format(student_outputs))
         print("Solution Output: {}".format(soln_outputs))
-        self.assertEqual(student_outputs, soln_outputs)        
+        self.assertEqual(student_outputs, soln_outputs)
 
 class Test_1b(GradedTestCase):
     @graded()
