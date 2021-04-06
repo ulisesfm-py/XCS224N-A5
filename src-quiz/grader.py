@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import unittest, random, sys, copy, argparse, inspect
 from graderUtil import graded, CourseTestRunner, GradedTestCase
+import traceback
 
 # Import student submission
 import submission
