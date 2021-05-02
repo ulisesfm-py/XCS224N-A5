@@ -1252,6 +1252,8 @@ class Test_2d(GradedTestCase):
         print('Expect decode_greedy output to be a list length %s' % BATCH_SIZE_2D)
         print('Student\'s decode_greedy output is a list length %s' % len(decodedWords))
         self.assertTrue(len(decodedWords) == BATCH_SIZE_2D, msg='Failure: list is wrong length.')
+        self.assertFalse(any([not isinstance(word, str) for word in decodedWords]),
+                         msg='Failure: list should only contain strings.')
 
     @graded(is_hidden=True)
     def test_2(self):
