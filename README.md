@@ -1,3 +1,7 @@
+# XCS224N Revisions
+Repository contents for the previous cohort is in the following branches.
+- `Rev_XCS224N_Sept2019-Mar2021` branch: cohort from Sept. 2019 to March 2021
+
 # XCS Student Code Repository
 This repository contains all code for your assignment!
 The build tools in this repo can be used to run the autograder locally or
