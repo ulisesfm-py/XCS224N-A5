@@ -38,7 +38,7 @@ There are two types of unit tests used by the autograder:
 
 For debugging purposes, you can run a single unit test locally.  For example, you
 can run the test case |3a-0-basic| using the following terminal command within
-the |src/| subdirectory:
+the |src/| subdirectory. Exact test case name can be found from |grader.py| or the output of the |python grader.py| run.
 \begin{lstlisting}
 $ python grader.py 3a-0-basic
 \end{lstlisting}

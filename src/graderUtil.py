@@ -179,8 +179,14 @@ class GradedTestCase(unittest.TestCase):
     ans2 = comp(getattr(submission, func_name))
     end = time.perf_counter()
     if use_solution:
-      ans1 = comp(getattr(solution, func_name))
-      self.assertEqual(ans1, ans2)
+      if func_name == "multiple_choice_2d":
+        if ans2 == ['T'] or ans2 == ['F']:
+          return True
+        else:
+          return False
+      else:
+        ans1 = comp(getattr(solution, func_name))
+        self.assertEqual(ans1, ans2)
     else:
       # If not using the solution, double the time to make the student's runtime more realistic
       time.sleep(end-start)
