@@ -88,7 +88,7 @@ if args.function == 'pretrain':
     ###     1. Pretrain the model on this corpus
     ###     2. Save the resulting model in args.writing_params_path
     ### - Make sure to use the following hyperparameters for pretraining:
-    ###     max_epochs=150
+    ###     max_epochs=200
     ###     batch_size=128
     ###     learning_rate=6e-3
     ###     lr_decay=True

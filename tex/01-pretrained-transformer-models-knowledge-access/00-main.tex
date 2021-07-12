@@ -142,7 +142,7 @@ Training will take less than 10 minutes (on Azure).  Report your model's accurac
 % ISS
 % \part[10]
 \item \points{1e}  \textbf{Define a \textit{span corruption} function for pretraining.}\\
-In the file \texttt{src/dataset.py}, implement the \texttt{\_\_getitem\_\_()} function for the dataset class \texttt{CharCorruptionDataset}.
+In the file \texttt{src/submission/dataset.py}, implement the \texttt{\_\_getitem\_\_()} function for the dataset class \texttt{CharCorruptionDataset}.
 Follow the instructions provided in the comments in \texttt{dataset.py}.
 Span corruption is explored in the \href{https://arxiv.org/pdf/1910.10683.pdf}{T5 paper} \cite{raffel2020exploring}.
 It randomly selects spans of text in a document and replaces them with unique tokens (noising).
@@ -163,7 +163,7 @@ No written answer is required for this part.
 
 % ISS
 %\part[10]
-\item \points{1f} \textbf{Pretrain, finetune, and make predictions. Budget 2 hours for training.}\\
+\item \points{1f} \textbf{Pretrain, finetune, and make predictions. Budget 3 hours for training.}\\
 Now fill in the \textit{pretrain} portion of \texttt{run.py}, which will pretrain a model on the span corruption task. Additionally, modify your \textit{finetune} portion to handle finetuning in the case \textit{with} pretraining. In particular, if a path to a pretrained model is provided in the bash command, load this model before finetuning it on the birth-place prediction task.
 % to read from the parameters trained during pretraining, if a path to those parameters
 Pretrain your model on \texttt{wiki.txt} (which should take approximately two hours), finetune it on \texttt{NameDataset} and evaluate it. Specifically, you should be able to run the following three four commands:
@@ -201,7 +201,7 @@ Report the accuracy on the dev set (printed by the third command above). We expe
 
 % ISS
 % \part[10]
-\item \points{1g} \textbf{Research! Write and try out the \textit{synthesizer} variant (Budget 2 hours for pretraining!)}\\
+\item \points{1g} \textbf{Research! Write and try out the \textit{synthesizer} variant (Budget 3 hours for pretraining!)}\\
 We'll now go to changing the Transformer architecture itself -- specifically, the self-attention module.
 While we've been using a self-attention scoring function based on dot products, this involves a rather intensive computation that's quadratic in the sequence length. This is because the dot product between $\ell^2$ pairs of word vectors is computed in each computation.
 \textit{Synthesized attention} \cite{tay2020synthesizer} is a very recent alternative that has potential benefits by removing this dot product (and quadratic computation) entirely.
@@ -234,11 +234,11 @@ One way to interpret this is as follows: The term $(XQ_i)(XK_i)^\top$ is an $\el
 The synthesizer variant eschews the all-pairs dot product and directly computes the $\ell \times \ell$ matrix of attention scores by mapping each $d$-dimensional vector of each head for $X$ to an $\ell$-dimesional vector of unnormalized attention weights.
 
 %In the rest of the code in the \texttt{src/} folder, make modifications to your model such that you can construct an otherwise-identical model with your new synthesizer attention , and add the ability to switch between attention types to \texttt{run.py} (marked \texttt{[part g]} in the code).
-In the rest of the code in the \texttt{src/} folder, modify your model to support using either \texttt{CausalSelfAttention} or \texttt{SynthesizerAttention}. Add the ability to switch between these attention variants depending on whether ``vanilla'' (for causal self-attention) or ``synthesizer'' (for the synthesizer variant) is selected in the command line arguments (see the section marked \texttt{[part g]} in \texttt{src/run.py}). 
+In the rest of the code in the \texttt{src/submission} folder, modify your model to support using either \texttt{CausalSelfAttention} or \texttt{SynthesizerAttention}. Add the ability to switch between these attention variants depending on whether ``vanilla'' (for causal self-attention) or ``synthesizer'' (for the synthesizer variant) is selected in the command line arguments (see the section marked \texttt{[part g]} in \texttt{src/submission/run.py}). 
 You are free to implement this functionality in any way you choose, so long as it supports these command line arguments.
 
 Below are bash commands that your code should support in order to pretrain the model, finetune it, and make predictions on the dev and test sets.
-Note that the pretraining process will take approximately 2 hours.
+Note that the pretraining process will take approximately 3 hours.
 \begin{lstlisting}[language=bash]
 # Pretrain the model
 cd src/submission
