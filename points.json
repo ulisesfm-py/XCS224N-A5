@@ -12,8 +12,8 @@
     "2c-0-basic" : {"points":1, "question_id":"2c", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false},
 
     "3a-0-basic" : {"points":1, "question_id":"3a", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false},
-    "3b-0-basic" : {"points":2, "question_id":"3b", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false},
+    "3b-0-basic" : {"points":1, "question_id":"3b", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false},
     "3c-0-basic" : {"points":2, "question_id":"3c", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false},
-    "3d-0-basic" : {"points":1, "question_id":"3d", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false},
+    "3d-0-basic" : {"points":2, "question_id":"3d", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false},
     "3e-0-basic" : {"points":2, "question_id":"3e", "is_written":true, "is_coding":false, "is_extra_credit":true, "no_label":false}
 }
