@@ -9,7 +9,7 @@ In this question, we'll get some practice working with the self-attention equati
 
 % \begin{parts}
 
-\textbf{Copying in attention:}
+%\textbf{Copying in attention:}
 
 \begin{enumerate}[(a)]
 
@@ -57,7 +57,7 @@ Consider a set of key vectors $\{k_1,\dots,k_n\}$ that are now randomly sampled,
 Further, assume that the means $\mu_i$ are all perpendicular; $\mu_i^\top \mu_j = 0$ if $i\not=j$, and unit norm, $\|\mu_i\|=1$.
 
     % ISS
-    \begin{enumerate}
+    \begin{enumerate}[label=\roman*.]
     % \begin{subparts}
     \item (1 point) Assume that the covariance matrices are $\Sigma_i = \alpha I$, for vanishingly small $\alpha$.
     Design a query $q$ in terms of the $\mu_i$ such that as before, $c\approx \frac{1}{2}(v_a + v_b)$, and provide a brief argument as to why it works.
@@ -99,10 +99,10 @@ Further, assume that the means $\mu_i$ are all perpendicular; $\mu_i^\top \mu_j 
 Now we'll see some of the power of multi-headed attention.
 We'll consider a simple version of multi-headed attention which is identical to single-headed self-attention as we've presented it in this homework, except two query vectors ($q_1$ and $q_2$) are defined, which leads to a pair of vectors ($c_1$ and $c_2$), each the output of single-headed attention given its respective query vector.
 The final output of the multi-headed attention is their average, $\frac{1}{2}(c_1+c_2)$.
-As in question 1(\ref{q_problem_with_single_head}), consider a set of key vectors $\{k_1,\dots,k_n\}$ that are randomly sampled, $k_i\sim \mathcal{N}(\mu_i, \Sigma_i)$, where the means $\mu_i$ are known to you, but the covariances $\Sigma_i$ are unknown.
+As in question 3(\ref{q_problem_with_single_head}), consider a set of key vectors $\{k_1,\dots,k_n\}$ that are randomly sampled, $k_i\sim \mathcal{N}(\mu_i, \Sigma_i)$, where the means $\mu_i$ are known to you, but the covariances $\Sigma_i$ are unknown.
 Also as before, assume that the means $\mu_i$ are mutually orthogonal; $\mu_i^\top \mu_j = 0$ if $i\not=j$, and unit norm, $\|\mu_i\|=1$.
     % \begin{subparts}
-    \begin{enumerate}
+    \begin{enumerate}[label=\roman*.]
     % \subpart[1]
     \item (1 point) Assume that the covariance matrices are $\Sigma_i=\alpha I$, for vanishingly small $\alpha$.
     Design $q_1$ and $q_2$ such that $c$ is approximately equal to $\frac{1}{2}(v_a+v_b)$. 
@@ -147,7 +147,7 @@ Note that this is single-headed self-attention.
 In this question, we'll show how key-value-query attention like this allows the network to use different aspects of the input vectors $x_i$ in how it defines keys, queries, and values.
 Intuitively, this allows networks to choose different aspects of $x_i$ to be the ``content'' (value vector) versus what it uses to determine ``where to look`` for content (keys and queries.)
 
-    \begin{enumerate}
+    \begin{enumerate}[label=\roman*.]
     % \begin{subparts}
     % \subpart[3]
     \item (1 points) First, consider if we didn't have key-query-value attention. For keys, queries, and values we'll just use $x_i$; that is, $v_i=q_i=k_i=x_i$.
