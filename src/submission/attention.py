@@ -51,10 +51,6 @@ class CausalSelfAttention(nn.Module):
         y = self.resid_drop(self.proj(y))
         return y
 
-"""
-Write your SynthesizerAttention below.
-Hint: paste over the CausalSelfAttention above and modify it minimally.
-"""
 
 class SynthesizerAttention(nn.Module):
     """

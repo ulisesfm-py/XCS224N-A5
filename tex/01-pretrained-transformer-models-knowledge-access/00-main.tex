@@ -99,10 +99,10 @@ Note that you do not have to write any code or submit written answers for this p
 % \part[0]
 \item \points{1c} \textbf{Implement finetuning (without pretraining).}\\
 Take a look at \texttt{run.py}. It has some skeleton code specifying flags you'll eventually need to handle as command line arguments.
-In particular, you might want to \textit{pretrain}, \textit{finetune}, or \textit{evaluate} a model with this code. For now, we'll fxfocus on the finetuning function, in the case without pretraining.
+In particular, you might want to \textit{pretrain}, \textit{finetune}, or \textit{evaluate} a model with this code. For now, we'll focus on the finetuning function, in the case without pretraining.
 
 Taking inspiration from the training code in the \texttt{play\_char.ipynb} file, write code to finetune a Transformer model on the name/birth place dataset, via examples from the \texttt{NameDataset} class. For now, implement the case without pretraining (i.e. create a model from scratch and train it on the birth-place prediction task from part (b)). You'll have to modify two sections, marked \texttt{[part c]} in the code: one to initialize the model, and one to finetune it. Note that you only need to initialize the model in the case labeled ``vanilla'' for now (later in section (g), we will explore a model variant).
-Use the hyperparameters for the \texttt{Trainer} specified in the \texttt{run.py} code.
+Use the hyperparameters for the \texttt{Trainer} specified in the \texttt{run.py} code. Note that you will need to use \texttt{pretrain\_dataset} even if you are not pretraining, refer the comment in \texttt{run.py} code. 
 
 Also take a look at the \textit{evaluation} code which has been implemented for you. It samples predictions from the trained model and calls \texttt{evaluate\_places()} to get the total percentage of correct place predictions. You will run this code in part (d) to evaluate your trained models.
 %Also fill in the portion for \textit{evaluation}, using the function \texttt{evaluate\_places}.
@@ -135,7 +135,10 @@ python run.py evaluate vanilla wiki.txt  \
         --outputs_path vanilla.nopretrain.test.predictions
 \end{lstlisting}
 
-Training will take less than 10 minutes (on Azure).  Report your model's accuracy on the dev set (as printed by the second command above). Don't be surprised if it is well below 10\%; we will be digging into why in Part 3. As a reference point, we want to also calculate the accuracy the model would have achieved if it had just predicted ``London'' as the birth place for everyone in the dev set. Fill in \texttt{london\_baseline.py} to calculate the accuracy of that approach and report your result in your write-up. You should be able to leverage existing code such that the file is only a few lines long. 
+Training will take less than 10 minutes (on Azure). Your grades will be based on the output files from the run.
+
+Don't be surprised if the evaluation result is well below 10\%; we will be digging into why in Part 3. As a reference point, we want to also calculate the accuracy the model would have achieved if it had just predicted ``London'' as the birth place for everyone in the dev set. 
+
 %For this part our submission script will be collecting \texttt{vanilla.model.params}, \texttt{vanilla.nopretrain.dev.predictions}, and \texttt{vanilla.nopretrain.test.predictions}.
 %We've provided, in \texttt{utils.py}, the function \texttt{evaluate\_places}, which we'll use to compare your predicted birth places to the true ones.
 
@@ -166,8 +169,8 @@ No written answer is required for this part.
 \item \points{1f} \textbf{Pretrain, finetune, and make predictions. Budget 3 hours for training.}\\
 Now fill in the \textit{pretrain} portion of \texttt{run.py}, which will pretrain a model on the span corruption task. Additionally, modify your \textit{finetune} portion to handle finetuning in the case \textit{with} pretraining. In particular, if a path to a pretrained model is provided in the bash command, load this model before finetuning it on the birth-place prediction task.
 % to read from the parameters trained during pretraining, if a path to those parameters
-Pretrain your model on \texttt{wiki.txt} (which should take approximately two hours), finetune it on \texttt{NameDataset} and evaluate it. Specifically, you should be able to run the following three four commands:
-(Don't be concerned if the loss appears to plateau in the middle of pretraining; it will eventually go back down.)
+Pretrain your model on \texttt{wiki.txt} (which should take approximately three hours), finetune it on \texttt{NameDataset} and evaluate it. Specifically, you should be able to run the following four commands:
+
 \begin{lstlisting}[language=bash]
 # Pretrain the model
 cd src/submission
@@ -193,7 +196,7 @@ python run.py evaluate vanilla wiki.txt  \
         --outputs_path vanilla.pretrain.test.predictions
 \end{lstlisting}
 
-Report the accuracy on the dev set (printed by the third command above). We expect the dev accuracy will be at least 10\%, and will expect a similar accuracy on the held out test set.
+%Report the accuracy on the dev set (printed by the third command above). We expect the dev accuracy will be at least 10\%, and will expect a similar accuracy on the held out test set.
 
 %From this section, you'll submit: \texttt{vanilla.finetune.params}, \texttt{vanilla.pretrain.dev.predictions}, \\ and \texttt{vanilla.pretrain.test.predictions}.
 
@@ -264,7 +267,8 @@ python run.py evaluate synthesizer wiki.txt  \
         --outputs_path synthesizer.pretrain.test.predictions
 \end{lstlisting}
 
-Report the accuracy of your synthesizer attention model on birth-place prediction on \texttt{birth\_dev.tsv} after pretraining and fine-tuning.
+%Report the accuracy of your synthesizer attention model on birth-place prediction on \texttt{birth\_dev.tsv} after pretraining and fine-tuning.
+
 %Save the predictions of the model on \texttt{wiki\_places\_test.tsv} to \texttt{synthesizer.pretrain.test.predictions}.
 
 %From this section, you'll submit: \texttt{synthesizer.finetune.params}, \texttt{synthesizer.pretrain.dev.predictions},\\ and \texttt{synthesizer.pretrain.test.predictions}.
@@ -272,10 +276,11 @@ Report the accuracy of your synthesizer attention model on birth-place predictio
 % ISS
 % \begin{subparts}
 % \subpart[8]
-    \begin{enumerate}
+    \begin{enumerate}[label=\roman*.]
     % paritial point, manual
     %\item (9 points) We'll score your model as to whether it gets at least 5\% accuracy on the test set, which has answers held out.
-    \item We'll score your model as to whether it gets at least 5\% accuracy on the test set, which has answers held out.
+    \item We'll score your model using held out dataset.
+    %\item We'll score your model as to whether it gets at least 5\% accuracy on the test set, which has answers held out.
     % ISS
     % \subpart[2]
     % paritial point, manual
@@ -285,9 +290,26 @@ Report the accuracy of your synthesizer attention model on birth-place predictio
 
 \end{enumerate}
 
-\begin{answer}
-% ### START CODE HERE ###
-% ### END CODE HERE ###
-\end{answer}
+% \begin{answer}
+% % ### START CODE HERE ###
+% % ### END CODE HERE ###
+% \end{answer}
 % \end{subparts}
 % \end{parts}
+
+
+
+\textbf{Deliverables}
+
+For this assignment, please run the following command and submit |assignment5_submission.zip|.
+
+\begin{lstlisting}[language=bash]
+
+
+cd src/submission
+
+./collect_submission.sh
+
+# submit assignment5_submission.zip to gradescope
+\end{lstlisting}
+
