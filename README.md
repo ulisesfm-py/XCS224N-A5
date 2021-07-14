@@ -1,5 +1,3 @@
-# !!! to update
-
 # XCS224N Revisions
 Repository contents for the previous cohort is in the following branches.
 - `Rev_XCS224N_Sept2019-Mar2021` branch: cohort from Sept. 2019 to March 2021
@@ -15,7 +13,7 @@ Take a look at the problem set PDF:
 typeset) PDF document** submission is required (typeset instructions below).
 
 - If contains any questions requiring coding responses, **assignment5_submission.zip** must be uploaded and submitted to the autograder.
-instructions below). See the pdf file for preparing the file.
+instructions below). See the A5.pdf file for how to prepare the file.
 
 - Many of our problem sets will require both written (or typeset) AND coding submissions. Good luck!
 
