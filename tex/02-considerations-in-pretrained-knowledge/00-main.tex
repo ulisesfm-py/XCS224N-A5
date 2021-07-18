@@ -27,11 +27,16 @@
 \section{Considerations in pretrained knowledge}
 % \begin{parts}
 
+In this section, we are asking you the intuitions and considerations from the pretrained Transformer coding in the previous section.
+We will create a pinned slack channel discussion for you to answer and discuss with the other learners.
+
+These are not graded but we encourage you to participate the discussion of the following questions.
+
 \begin{enumerate}[(a)]
 
 % ISS
 % \part[1]
-\item \points{2a}
+\item
 Succinctly explain why the pretrained (vanilla) model was able to achieve a higher accuracy than the accuracy of the non-pretrained.
 
 \begin{answer}
@@ -41,7 +46,7 @@ Succinctly explain why the pretrained (vanilla) model was able to achieve a high
 
 % ISS
 % \part[2]
-\item \points{2b}
+\item
 Take a look at some of the correct predictions of the pretrain+finetuned vanilla model, as well as some of the errors.
 We think you'll find that it's impossible to tell, just looking at the output, whether the model \textit{retrieved} the correct birth place, or \textit{made up} an incorrect birth place.
 Consider the implications of this for user-facing systems that involve pretrained NLP components.
@@ -54,7 +59,7 @@ Come up with two reasons why this indeterminacy of model behavior may cause conc
 
 % ISS
 % \part[2]
-\item \points{2c}
+\item
 If your model didn't see a person's name at pretraining time, and that person was not seen at fine-tuning time either, it is not possible for it to have ``learned'' where they lived.
 Yet, your model will produce \textit{something} as a predicted birth place for that person's name if asked.
 Concisely describe a strategy your model might take for predicting a birth place for that person's name, and one reason why this should cause concern for the use of such applications.

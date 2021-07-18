@@ -48,7 +48,7 @@ The ``GPT'' in \mingpt refers to the Transformer language model of OpenAI, origi
 
 %Your overall goal is to repurpose this codebase with its Jupyter notebook for language modeling to build a small \textit{Text-to-text-transfer-transformer} (or, \textsc{T5})-style encoder-decoder model, 
 
-As in previous assignments, you will want to develop on your machine locally, then run training on Azure. You can use the same conda environment from previous assignments for local development, and the same process for training on Azure (see the \textit{Practical Guide for Using the VM} section of the \href{https://docs.google.com/document/d/10J520Vnb1LnAMo0qgSYpG5cEEbomqQ371NIqg1IAv-4/edit?usp=sharing}{XCS224N Azure Guide} for a refresher). Specifically, you'll still be running ``\texttt{conda activate XCS224N}'' on the Azure machine. You'll need around 5 hours for training, so budget your time accordingly!
+As in previous assignments, you will want to develop on your machine locally, then run training on Azure. You can use the same conda environment from previous assignments for local development, and the same process for training on Azure (see the \textit{Practical Guide for Using the VM} section of the \href{https://docs.google.com/document/d/10J520Vnb1LnAMo0qgSYpG5cEEbomqQ371NIqg1IAv-4/edit?usp=sharing}{XCS224N Azure Guide} for a refresher). You might find the troubleshooting section useful if you see any issue in conda environment and GPU usage. Specifically, you'll still be running ``\texttt{conda activate XCS224N\_GPU}'' on the Azure machine. You'll need around 5 hours for training, so budget your time accordingly!
 
 Your work with this codebase is as follows:
 
@@ -56,10 +56,10 @@ Your work with this codebase is as follows:
 % \begin{parts}
 % ISS
 % \part[0]
-\item \points{1a} \textbf{Check out the demo.}\\
-In  the \texttt{src/submission/mingpt-demo/} folder is a Jupyter notebook (\texttt{play\_char.ipynb}) that trains and samples from a Transformer language model.
-Take a look at it (locally on your computer and you might need to install Jupyter notebootk \texttt{pip install jupyter}) to get somewhat familiar with how it defines and trains models.
-Some of the code you're writing below will be inspired by what you see in this notebook.
+\item \points{1a} \textbf{Review the minGPT demo code.}\\
+In  the \texttt{src/submission/mingpt-demo/} folder, there is a Jupyter notebook (\texttt{play\_char.ipynb}) that trains and samples from a Transformer language model.
+Take a look at it locally on your computer and you might need to install Jupyter notebootk \texttt{pip install jupyter} to get somewhat familiar with the code how it defines and trains models. You don't need to run the train locally, because training will take long time on CPU only local environment.
+Some of the code you are writing below will be inspired by what you see in this notebook.
 
 Note that you do not have to write any code or submit written answers for this part.
 %If you want to run it, you'll need
@@ -108,7 +108,7 @@ Also take a look at the \textit{evaluation} code which has been implemented for 
 %Also fill in the portion for \textit{evaluation}, using the function \texttt{evaluate\_places}.
 %Here, take note of the code in \texttt{play\_char.ipynb} that samples from the trained model, and repurpose it to make a prediction with the model for the name/place task.
 
-This is an intermediate step for later portions, including Part~\ref{part_predictions_nopretraining}, which contains commands you can run to check your implementation. No written answer is required for this part.
+Note that this is an intermediate step for later portions, including Part~\ref{part_predictions_nopretraining}, which contains commands you can run to check your implementation. No written answer is required for this part.
 %; see there as well as \texttt{run.py}.
 
 % ISS
@@ -137,7 +137,7 @@ python run.py evaluate vanilla wiki.txt  \
 
 Training will take less than 10 minutes (on Azure). Your grades will be based on the output files from the run.
 
-Don't be surprised if the evaluation result is well below 10\%; we will be digging into why in Part 3. As a reference point, we want to also calculate the accuracy the model would have achieved if it had just predicted ``London'' as the birth place for everyone in the dev set. 
+Don't be surprised if the evaluation result is well below 10\%; we will be digging into why in Part 2. As a reference point, we want to also calculate the accuracy the model would have achieved if it had just predicted ``London'' as the birth place for everyone in the dev set. 
 
 %For this part our submission script will be collecting \texttt{vanilla.model.params}, \texttt{vanilla.nopretrain.dev.predictions}, and \texttt{vanilla.nopretrain.test.predictions}.
 %We've provided, in \texttt{utils.py}, the function \texttt{evaluate\_places}, which we'll use to compare your predicted birth places to the true ones.
@@ -145,7 +145,8 @@ Don't be surprised if the evaluation result is well below 10\%; we will be diggi
 % ISS
 % \part[10]
 \item \points{1e}  \textbf{Define a \textit{span corruption} function for pretraining.}\\
-In the file \texttt{src/submission/dataset.py}, implement the \texttt{\_\_getitem\_\_()} function for the dataset class \texttt{CharCorruptionDataset}.
+In the file \texttt{src/submission/dataset.py}, implement the \texttt{\_\_getitem\_\_()} function for the dataset class \\
+\texttt{CharCorruptionDataset}.
 Follow the instructions provided in the comments in \texttt{dataset.py}.
 Span corruption is explored in the \href{https://arxiv.org/pdf/1910.10683.pdf}{T5 paper} \cite{raffel2020exploring}.
 It randomly selects spans of text in a document and replaces them with unique tokens (noising).
