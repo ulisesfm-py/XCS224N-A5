@@ -65,7 +65,7 @@ def evaluate_places(filepath, predicted_places):
   with open(filepath, encoding='utf-8') as fin:
     lines = [x.strip().split('\t') for x in fin]
     if len(lines[0]) == 1:
-      print('No gold birth places provided; returning (0,0)')
+      print('!!! No ground truth is provided, this will be done on the autograder, returning (0,0)')
       return (0,0)
     true_places = [x[1] for x in lines]
     total = len(true_places)
