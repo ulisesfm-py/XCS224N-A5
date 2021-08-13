@@ -32,6 +32,9 @@ class CausalSelfAttention(nn.Module):
         self.n_head = config.n_head
 
     def forward(self, x, layer_past=None):
+        # (B x T x C) is of dimension (batch x block_size x n_embd) which is (batch x l x d) in the handout.
+        # nh should be number_of_heads, and hs would then stand for n_embed (or "dimensionality" d in the handout) per head
+
         B, T, C = x.size()
 
         # calculate query, key, values for all heads in batch and move head forward to be the batch dim
