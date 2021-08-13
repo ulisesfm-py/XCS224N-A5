@@ -108,7 +108,7 @@ less than 1/4 the length of the truncated document) for full credit.
 
 3. Rearrange these substrings into the following form:
 
-    [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] [pads]
+    [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] MASK_CHAR [pads]
   
   This resulting string, denoted masked_string, serves as the output example.
   Here MASK_CHAR is the masking character defined in Vocabulary Specification,
