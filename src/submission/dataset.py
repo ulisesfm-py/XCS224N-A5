@@ -169,32 +169,6 @@ class CharCorruptionDataset(Dataset):
         # returns the length of the dataset
         return len(self.data)
 
-    def get_context_and_target(self, dix):
-        # Choose a length for the conditioning context at random;
-        # take just the characters in the conditioning context
-        context_len = random.randint(4, int(self.max_context_size))
-        context_chars = dix[:context_len]
-        
-        # decide on the length of the sequence to mask out, and starting index
-        expected_mask_len = int(self.masking_percent*context_len)
-        masked_context_len = random.randint(
-            int(expected_mask_len*.75), int(expected_mask_len*1.25))
-        mask_start = random.randint(0, int(context_len)-1-masked_context_len)
-        
-        # Construct input from context with masked tokens replaced with self.MASK_CHAR
-        inp = (context_chars[:mask_start]
-               + [self.stoi[self.MASK_CHAR]]
-               + context_chars[mask_start+masked_context_len:])
-        # Construct output as self.MASK_CHAR followed by masked tokens
-        oup = ([self.stoi[self.MASK_CHAR]]
-               + context_chars[mask_start:mask_start+masked_context_len]
-               + [self.stoi[self.MASK_CHAR]])
-        
-        # Add padding tokens as necessary
-        inp = inp + [self.stoi[self.PAD_CHAR]]*(self.max_context_size-len(inp))
-        oup = oup + [self.stoi[self.PAD_CHAR]]*(self.block_size-self.max_context_size-len(oup))
-        return inp, oup
-
     def __getitem__(self, idx):
 
         ### TODO:
@@ -218,9 +192,9 @@ if __name__ == '__main__':
 
     if args.dataset_type == 'namedata':
         # Even if it hasn't been implemented, we use it to define the vocab
-        corruption_dataset = CharCorruptionDataset(open('wiki.txt', encoding='utf-8').read(), 128) 
+        corruption_dataset = CharCorruptionDataset(open('./../data/wiki.txt', encoding='utf-8').read(), 128) 
         # Make the name dataset
-        name_dataset = NameDataset(open('birth_places_train.tsv', encoding='utf-8').read(),
+        name_dataset = NameDataset(open('./../data/birth_places_train.tsv', encoding='utf-8').read(),
                 corruption_dataset)
         for _, example in zip(range(4), name_dataset):
             x, y = example
@@ -228,7 +202,7 @@ if __name__ == '__main__':
             print('y:', ''.join([name_dataset.itos[int(c)] for c in y]))
         pass
     elif args.dataset_type == 'charcorruption':
-        corruption_dataset = CharCorruptionDataset(open('wiki.txt', encoding='utf-8').read(), 128) 
+        corruption_dataset = CharCorruptionDataset(open('./../data/wiki.txt', encoding='utf-8').read(), 128) 
         for _, example in zip(range(4), corruption_dataset):
             x, y = example
             print('x:', ''.join([corruption_dataset.itos[int(c)] for c in x]))

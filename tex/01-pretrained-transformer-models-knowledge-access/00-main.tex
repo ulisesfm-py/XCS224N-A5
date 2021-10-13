@@ -98,11 +98,10 @@ Note that you do not have to write any code or submit written answers for this p
 % ISS
 % \part[0]
 \item \points{1c} \textbf{Implement finetuning (without pretraining).}\\
-Take a look at \texttt{run.py}. It has some skeleton code specifying flags you'll eventually need to handle as command line arguments.
-In particular, you might want to \textit{pretrain}, \textit{finetune}, or \textit{evaluate} a model with this code. For now, we'll focus on the finetuning function, in the case without pretraining.
+Take a look at \texttt{src/submission/helper.py}. It has some skeleton code you will implement to \textit{pretrain} and \textit{finetune} a model. For now, we'll focus on the finetuning function, in the case without pretraining.
 
-Taking inspiration from the training code in the \texttt{play\_char.ipynb} file, write code to finetune a Transformer model on the name/birth place dataset, via examples from the \texttt{NameDataset} class. For now, implement the case without pretraining (i.e. create a model from scratch and train it on the birth-place prediction task from part (b)). You'll have to modify two sections, marked \texttt{[part c]} in the code: one to initialize the model, and one to finetune it. Note that you only need to initialize the model in the case labeled ``vanilla'' for now (later in section (g), we will explore a model variant).
-Use the hyperparameters for the \texttt{Trainer} specified in the \texttt{run.py} code. Note that you will need to use \texttt{pretrain\_dataset} even if you are not pretraining, refer the comment in \texttt{run.py} code. 
+Taking inspiration from the training code in the \texttt{play\_char.ipynb} file, write code to finetune a Transformer model on the name/birth place dataset, via examples from the \texttt{NameDataset} class. For now, implement the case without pretraining (i.e. create a model from scratch and train it on the birth-place prediction task from part (b)). You'll have to modify three sections, marked \texttt{[part c]} in the code: one to initialize the model, and one to finetune it. Note that you only need to initialize the model in the case labeled ``vanilla'' for now (later in section (g), we will explore a model variant).
+Use the hyperparameters for the \texttt{Trainer} specified in the \texttt{src/submission/helper.py} code.
 
 Also take a look at the \textit{evaluation} code which has been implemented for you. It samples predictions from the trained model and calls \texttt{evaluate\_places()} to get the total percentage of correct place predictions. You will run this code in part (d) to evaluate your trained models.
 %Also fill in the portion for \textit{evaluation}, using the function \texttt{evaluate\_places}.
@@ -114,25 +113,16 @@ Note that this is an intermediate step for later portions, including Part~\ref{p
 % ISS
 %\part[5]
 \item \points{1d} \textbf{Make predictions (without pretraining).}\label{part_predictions_nopretraining}\\ 
-Train your model on \texttt{birth\_places\_train.tsv}, and evaluate on \texttt{birth\_dev.tsv}. Specifically, you should now be able to run the following three commands:
+Train your model on \texttt{birth\_places\_train.tsv}, and evaluate on \texttt{birth\_dev.tsv} and \texttt{birth\_test.tsv}. Specifically, you should now be able to run the following three commands:
 \begin{lstlisting}[language=bash]
 # Train on the names dataset
-cd src/submission
-python run.py finetune vanilla wiki.txt \
-        --writing_params_path vanilla.model.params \
-        --finetune_corpus_path birth_places_train.tsv
+./run.sh vanilla_finetune_without_pretrain
         
 # Evaluate on the dev set, writing out predictions
-python run.py evaluate vanilla wiki.txt  \
-        --reading_params_path vanilla.model.params \
-        --eval_corpus_path birth_dev.tsv \
-        --outputs_path vanilla.nopretrain.dev.predictions
+./run.sh vanilla_eval_dev_without_pretrain
         
 # Evaluate on the test set, writing out predictions
-python run.py evaluate vanilla wiki.txt  \
-        --reading_params_path vanilla.model.params \
-        --eval_corpus_path birth_test_inputs.tsv \
-        --outputs_path vanilla.nopretrain.test.predictions
+./run.sh vanilla_eval_test_without_pretrain
 \end{lstlisting}
 
 Training will take less than 10 minutes (on Azure). Your grades will be based on the output files from the run.
@@ -168,33 +158,22 @@ No written answer is required for this part.
 % ISS
 %\part[10]
 \item \points{1f} \textbf{Pretrain, finetune, and make predictions. Budget 2 hours for training.}\\
-Now fill in the \textit{pretrain} portion of \texttt{run.py}, which will pretrain a model on the span corruption task. Additionally, modify your \textit{finetune} portion to handle finetuning in the case \textit{with} pretraining. In particular, if a path to a pretrained model is provided in the bash command, load this model before finetuning it on the birth-place prediction task.
+Now fill in the \textit{pretrain} portion of \texttt{src/submission/helper.py}, which will pretrain a model on the span corruption task. Additionally, modify your \textit{finetune} portion to handle finetuning in the case \textit{with} pretraining. In particular, if a path to a pretrained model is provided in the bash command, load this model before finetuning it on the birth-place prediction task.
 % to read from the parameters trained during pretraining, if a path to those parameters
 Pretrain your model on \texttt{wiki.txt} (which should take approximately two hours), finetune it on \texttt{NameDataset} and evaluate it. Specifically, you should be able to run the following four commands:
 
 \begin{lstlisting}[language=bash]
 # Pretrain the model
-cd src/submission
-python run.py pretrain vanilla wiki.txt \
-        --writing_params_path vanilla.pretrain.params
+./run.sh vanilla_pretrain
         
 # Finetune the model
-python run.py finetune vanilla wiki.txt \
-        --reading_params_path vanilla.pretrain.params \
-        --writing_params_path vanilla.finetune.params \
-        --finetune_corpus_path birth_places_train.tsv
+./run.sh vanilla_finetune_with_pretrain
         
 # Evaluate on the dev set; write to disk
-python run.py evaluate vanilla wiki.txt  \
-        --reading_params_path vanilla.finetune.params \
-        --eval_corpus_path birth_dev.tsv \
-        --outputs_path vanilla.pretrain.dev.predictions
+./run.sh vanilla_eval_dev_with_pretrain
         
 # Evaluate on the test set; write to disk
-python run.py evaluate vanilla wiki.txt  \
-        --reading_params_path vanilla.finetune.params \
-        --eval_corpus_path birth_test_inputs.tsv \
-        --outputs_path vanilla.pretrain.test.predictions
+./run.sh vanilla_eval_test_with_pretrain
 \end{lstlisting}
 
 %Report the accuracy on the dev set (printed by the third command above). We expect the dev accuracy will be at least 10\%, and will expect a similar accuracy on the held out test set.
@@ -238,34 +217,22 @@ One way to interpret this is as follows: The term $(XQ_i)(XK_i)^\top$ is an $\el
 The synthesizer variant eschews the all-pairs dot product and directly computes the $\ell \times \ell$ matrix of attention scores by mapping each $d$-dimensional vector of each head for $X$ to an $\ell$-dimesional vector of unnormalized attention weights.
 
 %In the rest of the code in the \texttt{src/} folder, make modifications to your model such that you can construct an otherwise-identical model with your new synthesizer attention , and add the ability to switch between attention types to \texttt{run.py} (marked \texttt{[part g]} in the code).
-In the rest of the code in the \texttt{src/submission} folder, modify your model to support using either \texttt{CausalSelfAttention} or \texttt{SynthesizerAttention}. Add the ability to switch between these attention variants depending on whether ``vanilla'' (for causal self-attention) or ``synthesizer'' (for the synthesizer variant) is selected in the command line arguments (see the section marked \texttt{[part g]} in \texttt{src/submission/run.py}). 
-You are free to implement this functionality in any way you choose, so long as it supports these command line arguments.
+In the rest of the code in the \texttt{src/submission/helper.py} folder, modify your model to support using either \texttt{CausalSelfAttention} or \texttt{SynthesizerAttention}. Add the ability to switch between these attention variants depending on whether ``vanilla'' (for causal self-attention) or ``synthesizer'' (for the synthesizer variant) is selected in the command line arguments (see the section marked \texttt{[part g]} in \texttt{src/submission/helper.py}). 
 
 Below are bash commands that your code should support in order to pretrain the model, finetune it, and make predictions on the dev and test sets.
 Note that the pretraining process will take approximately 2 hours.
 \begin{lstlisting}[language=bash]
 # Pretrain the model
-cd src/submission
-python run.py pretrain synthesizer wiki.txt \
-        --writing_params_path synthesizer.pretrain.params
+./run.sh synthesizer_pretrain
         
 # Finetune the model
-python run.py finetune synthesizer wiki.txt \
-        --reading_params_path synthesizer.pretrain.params \
-        --writing_params_path synthesizer.finetune.params \
-        --finetune_corpus_path birth_places_train.tsv
+./run.sh synthesizer_finetune_with_pretrain
         
 # Evaluate on the dev set; write to disk
-python run.py evaluate synthesizer wiki.txt  \
-        --reading_params_path synthesizer.finetune.params \
-        --eval_corpus_path birth_dev.tsv \
-        --outputs_path synthesizer.pretrain.dev.predictions
+./run.sh synthesizer_eval_dev_with_pretrain
         
 # Evaluate on the test set; write to disk
-python run.py evaluate synthesizer wiki.txt  \
-        --reading_params_path synthesizer.finetune.params \
-        --eval_corpus_path birth_test_inputs.tsv \
-        --outputs_path synthesizer.pretrain.test.predictions
+./run.sh synthesizer_eval_test_with_pretrain
 \end{lstlisting}
 
 %Report the accuracy of your synthesizer attention model on birth-place prediction on \texttt{birth\_dev.tsv} after pretraining and fine-tuning.
@@ -302,15 +269,26 @@ python run.py evaluate synthesizer wiki.txt  \
 
 \textbf{Deliverables}
 
-For this assignment, please run the following command and submit |assignment5_submission.zip|.
+For this assignment, please submit the following files within the src/submission directory. This includes:
 
-\begin{lstlisting}[language=bash]
-
-
-cd src/submission
-
-sh ./collect_submission.sh
-
-# submit assignment5_submission.zip to gradescope
-\end{lstlisting}
+\begin{enumerate}
+        \item \texttt{src/submission/\_\_init\_\_.py}
+        \item \texttt{src/submission/attention.py}
+        \item \texttt{src/submission/dataset.py}
+        \item \texttt{src/submission/helper.py}
+        \item \texttt{src/submission/model.py}
+        \item \texttt{src/submission/trainer.py}
+        \item \texttt{src/submission/utils.py}
+        \item \texttt{src/submission/vanilla.model.params}
+        \item \texttt{src/submission/vanilla.nopretrain.dev.predictions}
+        \item \texttt{src/submission/vanilla.nopretrain.test.predictions}
+        \item \texttt{src/submission/vanilla.pretrain.params}
+        \item \texttt{src/submission/vanilla.finetune.params}
+        \item \texttt{src/submission/vanilla.pretrain.dev.predictions}
+        \item \texttt{src/submission/vanilla.pretrain.test.predictions}
+        \item \texttt{src/submission/synthesizer.pretrain.params}
+        \item \texttt{src/submission/synthesizer.finetune.params}
+        \item \texttt{src/submission/synthesizer.pretrain.dev.predictions}
+        \item \texttt{src/submission/synthesizer.pretrain.test.predictions}
+\end{enumerate}
 
