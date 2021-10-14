@@ -20,3 +20,4 @@ dependencies:
     - sentencepiece
     - sacrebleu
     - nltk
+    - timeout_decorator

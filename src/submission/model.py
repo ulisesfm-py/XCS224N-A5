@@ -14,8 +14,7 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-import attention
-
+from .attention import SynthesizerAttention, CausalSelfAttention
 
 class GPTConfig:
     """ base GPT config, params common to all GPT versions """
@@ -44,9 +43,9 @@ class Block(nn.Module):
         self.ln1 = nn.LayerNorm(config.n_embd)
         self.ln2 = nn.LayerNorm(config.n_embd)
         if config.synthesizer:
-            self.attn = attention.SynthesizerAttention(config)
+            self.attn = SynthesizerAttention(config)
         else:
-            self.attn = attention.CausalSelfAttention(config)
+            self.attn = CausalSelfAttention(config)
         self.mlp = nn.Sequential(
             nn.Linear(config.n_embd, 4 * config.n_embd),
             nn.GELU(),
