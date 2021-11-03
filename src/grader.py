@@ -80,7 +80,7 @@ class Test_1c(GradedTestCase):
 class Test_1d(GradedTestCase):
   @graded(is_hidden=True)
   def test_0(self):
-    """1d-0-basic:   test the dev score for vanilla attention without pretrain"""
+    """1d-0-hidden:   test the dev score for vanilla attention without pretrain"""
     n_correct, n_total = score_preds(
         "./submission/vanilla.nopretrain.dev.predictions",
         "./data/birth_dev.tsv")
@@ -89,7 +89,7 @@ class Test_1d(GradedTestCase):
   @graded(is_hidden=True)
   def test_1(self):
     #TODO: Make sure to place this under the autograder code section birth_test.tsv not exposed to students
-    """1d-1-basic:   test the test score for vanilla attention without pretrain"""
+    """1d-1-hidden:   test the test score for vanilla attention without pretrain"""
     n_correct, n_total = score_preds(
         "./submission/vanilla.nopretrain.test.predictions",
         "./data/birth_test.tsv")

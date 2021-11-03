@@ -26,4 +26,13 @@ R'''\input{00-instructions/03-honor-code}
 \bigskip
 ''')
 
+if meta['tex_show_autograder_instructions']:
+  print(R'''
+\input{00-instructions/04-autograder}
+\bigskip''')
+
+if meta['tex_show_test_cases']:
+  print(R'''
+\input{00-instructions/05-test-cases}
+\bigskip''')
 🐍
