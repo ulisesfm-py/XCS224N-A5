@@ -6,7 +6,7 @@ import os
 import traceback
 import torch
 import torch.nn as nn
-import timeout_decorator
+
 # Import student submission
 import submission
 
@@ -59,8 +59,7 @@ class Test_1c(GradedTestCase):
     expected = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).initialize_vanilla_model(self.mconf)
     self.assertEqual(str(expected), str(self.vanilla_model))
   
-  @graded()
-  @timeout_decorator.timeout(15)
+  @graded(timeout=15)
   def test_1(self):
     """1c-1-basic:  correct trainer object initialization for finetune without pretraining"""
     student_trainer_conf, student_trainer = submission.finetune(None, './data/birth_places_train.tsv', self.pretrain_dataset, BLOCK_SIZE, self.vanilla_model)
@@ -232,8 +231,7 @@ class Test_1g(GradedTestCase):
     self.mconf = submission.GPTConfig(self.pretrain_dataset.vocab_size, self.pretrain_dataset.block_size, n_layer=4, n_head=8, n_embd=256)
     self.synthesizer_model = submission.initialize_synthesizer_model(self.mconf)
 
-  @timeout_decorator.timeout(15)
-  @graded()
+  @graded(timeout=15)
   def test_0(self):
     """1g-0-basic:  correct trainer object initialization for finetune with pretraining for synthesizer"""
     student_trainer_conf, student_trainer = submission.finetune('./submission/synthesizer.pretrain.params', './data/birth_places_train.tsv', self.pretrain_dataset, BLOCK_SIZE, self.synthesizer_model)
