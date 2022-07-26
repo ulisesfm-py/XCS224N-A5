@@ -31,7 +31,6 @@ def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_
     ###     1. A finetuning corpus specified in finetune_corpus_path
     ###     2. A path reading_params_path containing pretrained model
     ###         parameters, or None if finetuning without a pretrained model
-    ###     3. An output path writing_params_path for the model parameters
     ### - Goals:
     ###     1. If reading_params_path is specified, load these parameters
     ###         into the model
@@ -90,6 +89,8 @@ def pretrain(pretrain_dataset, block_size, model):
 
 def train(model, writing_params_path, trainer_obj):
     ### TODO:
+    ### - Given:
+    ###     An output path writing_params_path for the model parameters
     ### [part c]:
     ###
     ### Note: trainer_obj is of type Trainer (see trainer.py for more details)
