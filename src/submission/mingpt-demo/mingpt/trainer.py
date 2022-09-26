@@ -5,6 +5,7 @@ so nothing in this file really has anything to do with GPT specifically.
 
 import math
 import logging
+import sys
 
 from tqdm import tqdm
 import numpy as np
@@ -49,6 +50,10 @@ class Trainer:
         if torch.cuda.is_available():
             self.device = torch.cuda.current_device()
             self.model = torch.nn.DataParallel(self.model).to(self.device)
+        elif torch.backends.mps.is_available() and torch.backends.mps.is_built():
+            self.device = torch.device("mps")
+            self.model = self.model.to(self.device)
+        print('use device: %s' % self.device, file=sys.stderr)
 
     def save_checkpoint(self):
         # DataParallel wrappers keep raw model object in .module attribute

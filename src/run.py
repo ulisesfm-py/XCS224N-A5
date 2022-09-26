@@ -62,13 +62,26 @@ def evaluate(args, pretrain_dataset, device, model):
         print('Predictions written to {}; no targets provided'
                 .format(args['--outputs_path']))
 
+def setup_device():
+    """ Setup the device used by PyTorch.
+    """
+    
+    device = torch.device("cpu")
+    
+    if torch.cuda.is_available(): 
+        device = torch.cuda.current_device()
+    elif torch.backends.mps.is_available() and torch.backends.mps.is_built():
+        device = torch.device("mps")
+
+    return device
+
 def main():
     """ Main func.
     """
     args = docopt(__doc__)
 
     # Save the device
-    device = torch.cuda.current_device() if torch.cuda.is_available() else 'cpu'
+    device = setup_device()
 
     # Keep the block size 128
     # NOTE!!!
