@@ -67,7 +67,7 @@ def pretrain(pretrain_dataset, block_size, model):
     ### TODO:
     ### [part f]:
     ### - Given:
-    ###     1. A corpus specified in pretrain_corpus_path
+    ###     1. A corpus specified in pretrain_dataset
     ### - Goals:
     ###     1. Pretrain the model on this corpus
     ###
