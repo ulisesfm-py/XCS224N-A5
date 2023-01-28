@@ -1,4 +1,4 @@
-name: XCS224N
+name: XCS224N_CUDA
 channels:
   - defaults
   - conda-forge
@@ -19,7 +19,4 @@ dependencies:
     - nltk
     - timeout_decorator
     - "--find-links https://download.pytorch.org/whl/torch_stable.html"
-    - torch==1.13.1; sys_platform != "linux" and sys_platform != "win32"
-    - torchvision==0.14.1; sys_platform != "linux" and sys_platform != "win32"
-    - torch==1.13.1+cpu; sys_platform == "linux" or sys_platform == "win32"
-    - torchvision==0.14.1+cpu; sys_platform == "linux" or sys_platform == "win32"
+    - torch==1.13.1+cu116
