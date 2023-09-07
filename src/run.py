@@ -7,6 +7,9 @@ Usage:
 
 Options:
     -h --help                               show this screen.
+    --compile                               compile the model
+    --no-compile                            do not compile the model
+    --backend=<str>                         backend to be used for compilation [default: inductor] {inductor,aot_eager,cudagraphs}
     --function=<function>                   Whether to 'pretrain', 'finetune' or 'evaluate' a model
     --variant=<attention-model>             Which variant of the model to run ('vanilla' or 'synthesizer')
     --pretrain_corpus_path=<file>           Path of the corpus to pretrain on
@@ -100,6 +103,14 @@ def main():
 
     # Create model
     attention_model = create_model(args, mconf)
+
+    if(args["--compile"] == True):
+        try:
+            attention_model = torch.compile(attention_model, backend=args["--backend"])
+            print(f"Attention based model compiled")
+        except Exception as err:
+            print(f"Model compile not supported: {err}")
+
     attention_model = attention_model.to(device)
 
     if args['--function'] == "finetune":
