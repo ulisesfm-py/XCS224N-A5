@@ -80,9 +80,11 @@ class timeout_func:
         signal.signal(signal.SIGALRM, handle_timeout)
         # Set the alarm
         signal.alarm(self.maxSeconds)
-        result = func(*args, **kwargs)
-        # Cleanup for potential future timers
-        signal.alarm(0)
+        try:
+          result = func(*args, **kwargs)
+        finally:
+          # Cleanup for potential future timers
+          signal.alarm(0)
       else:
         result = func(*args, **kwargs)
       return result
