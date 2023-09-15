@@ -15,7 +15,7 @@ def initialize_vanilla_model(mconf):
     ### END CODE HERE
     return attention_model
 
-def initialize_synthesizer_model(mconf):
+def initialize_perceiver_model(mconf, bottleneck_dim=32):
     attention_model = None
     ### TODO
     ### [part g]: Make some other model here
@@ -24,7 +24,7 @@ def initialize_synthesizer_model(mconf):
     ### END CODE HERE
     return attention_model
 
-def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_size, model):
+def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_size, model, finetune_lr=6e-4, writer=None):
     ### TODO:
     ### [part c] [part f]:
     ### - Given:
@@ -63,7 +63,7 @@ def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_
     ### END CODE HERE
     return tconf, trainer_obj
 
-def pretrain(pretrain_dataset, block_size, model):
+def pretrain(pretrain_dataset, block_size, model, pretrain_lr=6e-3, writer=None):
     ### TODO:
     ### [part f]:
     ### - Given:

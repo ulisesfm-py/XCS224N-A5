@@ -44,7 +44,7 @@ You'll find that this enables models to perform considerably above chance on a h
 
 The code you're provided with is a fork of Andrej Karpathy's \href{https://github.com/karpathy/minGPT}{\mingpt}.
 It's nicer than most research code in that it's relatively simple and transparent.
-The ``GPT'' in \mingpt refers to the Transformer language model of OpenAI, originally described in \href{https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf}{this paper} \cite{radford2018improving}.
+The ``GPT'' in \mingpt refers to the Transformer language model of OpenAI, originally described in \href{https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf}{this paper} \footnote{\url{https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf}}.
 
 %Your overall goal is to repurpose this codebase with its Jupyter notebook for language modeling to build a small \textit{Text-to-text-transfer-transformer} (or, \textsc{T5})-style encoder-decoder model, 
 
@@ -56,12 +56,14 @@ Your work with this codebase is as follows:
 % \begin{parts}
 % ISS
 % \part[0]
-\item \points{1a} \textbf{Review the minGPT demo code.}\\
+\item \points{1a} \textbf{Review the minGPT demo code (no need to submit code or written)}\\
+
+\textit{Note that you do not have to write any code or submit written answers for this part.}
+
 In  the \texttt{src/submission/mingpt-demo/} folder, there is a Jupyter notebook (\texttt{play\_char.ipynb}) that trains and samples from a Transformer language model.
-Take a look at it locally on your computer and you might need to install Jupyter notebootk \texttt{pip install jupyter} to get somewhat familiar with the code how it defines and trains models. You don't need to run the train locally, because training will take long time on CPU only local environment.
+Take a look at it locally on your computer and you might need to install Jupyter notebootk \texttt{pip install jupyter} or use vscode \footnote{\url{https://code.visualstudio.com/docs/datascience/jupyter-notebooks}} to get somewhat familiar with the code how it defines and trains models. \textit{You don't need to run the train locally, because training will take long time on CPU only local environment.}
 Some of the code you are writing below will be inspired by what you see in this notebook.
 
-Note that you do not have to write any code or submit written answers for this part.
 %If you want to run it, you'll need
 
 %Demo code is ready to run; go to the \texttt{mingpt-demo/} folder, run the Jupyter notbook \texttt{play\_char.ipynb} and walk through the steps to train a Transformer language model on some text of your choice.\footnote{Feel free to change the transformer size, as well as the number of training epochs, so that you can train on your computer. This is just to get you somewhat familiar with this code!}
@@ -85,8 +87,6 @@ In \texttt{dataset.py},
 %you'll take inspiration from \texttt{CharDataset}, and create the class \texttt{NameDataset}, which reads a TSV of name/place pairs and produces examples that we can feed to our Transformer model.
 you'll find the the class \texttt{NameDataset}, which reads a TSV (tab-separated values) file of name/place pairs and produces examples of the above form that we can feed to our Transformer model.
 
-%Follow the instructions there; this part is an intermediate step that will be graded via Part~\ref{part_predictions_nopretraining}.
-
 To get a sense of the examples we'll be working with, if you run the following code, it'll load your \texttt{NameDataset} on the training set \texttt{birth\_places\_train.tsv} and print out a few examples.
 \begin{lstlisting}[language=bash]
     cd src/submission
@@ -95,22 +95,22 @@ To get a sense of the examples we'll be working with, if you run the following c
 
 Note that you do not have to write any code or submit written answers for this part.
 
-% ISS
 % \part[0]
 \item \points{1c} \textbf{Implement finetuning (without pretraining).}\\
-Take a look at \texttt{src/submission/helper.py}. It has some skeleton code you will implement to \textit{pretrain} and \textit{finetune} a model. For now, we'll focus on the finetuning function, in the case without pretraining.
+Take a look at \texttt{src/submission/helper.py}, which is used by \texttt{src/run.py}.
 
-Taking inspiration from the training code in the \texttt{play\_char.ipynb} file, write code to finetune a Transformer model on the name/birth place dataset, via examples from the \texttt{NameDataset} class. For now, implement the case without pretraining (i.e. create a model from scratch and train it on the birth-place prediction task from part (b)). You'll have to modify three sections, marked \texttt{[part c]} in the code: one to initialize the model, one to finetune it, and one to train it. Note that you only need to initialize the model in the case labeled ``vanilla'' for now (later in section (g), we will explore a model variant).
+It has some skeleton code you will implement to \textit{pretrain}, \textit{finetune} or \textit{evaluate} a model. For now, we'll focus on the finetuning function, in the case without pretraining.
+
+Taking inspiration from the training code in the \texttt{src/submission/mingpt-demo/play\_char.ipynb} jupyter notebook file, write code to finetune a Transformer model on the name/birth place dataset, via examples from the \texttt{NameDataset} class. For now, implement the case without pretraining (i.e. create a model from scratch and train it on the birth-place prediction task from part (b)). You'll have to modify three sections, marked \texttt{[part c]} in the code: one to initialize the model, one to finetune it, and one to train it. Note that you only need to initialize the model in the case labeled ``vanilla'' for now (later in section (g), we will explore a model variant).
 Use the hyperparameters for the \texttt{Trainer} specified in the \texttt{src/submission/helper.py} code.
 
 Also take a look at the \textit{evaluation} code which has been implemented for you. It samples predictions from the trained model and calls \texttt{evaluate\_places()} to get the total percentage of correct place predictions. You will run this code in part (d) to evaluate your trained models.
 %Also fill in the portion for \textit{evaluation}, using the function \texttt{evaluate\_places}.
 %Here, take note of the code in \texttt{play\_char.ipynb} that samples from the trained model, and repurpose it to make a prediction with the model for the name/place task.
 
-Note that this is an intermediate step for later portions, including Part~\ref{part_predictions_nopretraining}, which contains commands you can run to check your implementation. No written answer is required for this part.
+\textit{Note that this is an intermediate step for later portions, including Part~\ref{part_predictions_nopretraining}, which contains commands you can run to check your implementation. No written answer is required for this part.}
 %; see there as well as \texttt{run.py}.
 
-% ISS
 %\part[5]
 \item \points{1d} \textbf{Make predictions (without pretraining).}\label{part_predictions_nopretraining}\\ 
 Train your model on \texttt{birth\_places\_train.tsv}, and evaluate on \texttt{birth\_dev.tsv} and \texttt{birth\_test.tsv}. Specifically, you should now be able to run the following three commands:
@@ -138,7 +138,7 @@ Don't be surprised if the evaluation result is well below 10\%; we will be diggi
 In the file \texttt{src/submission/dataset.py}, implement the \texttt{\_\_getitem\_\_()} function for the dataset class \\
 \texttt{CharCorruptionDataset}.
 Follow the instructions provided in the comments in \texttt{dataset.py}.
-Span corruption is explored in the \href{https://arxiv.org/pdf/1910.10683.pdf}{T5 paper} \cite{raffel2020exploring}.
+Span corruption is explored in the \href{https://arxiv.org/pdf/1910.10683.pdf}{T5 paper} \footnote{\url{https://arxiv.org/pdf/1910.10683.pdf}}.
 It randomly selects spans of text in a document and replaces them with unique tokens (noising).
 Models take this noised text, and are required to output a pattern of each unique sentinel followed by the tokens that were replaced by that sentinel in the input.
 In this question, you'll implement a simplification that only masks out a single sequence of characters.
@@ -155,7 +155,6 @@ To help you debug, if you run the following code, it'll sample a few examples fr
 
 No written answer is required for this part.
 
-% ISS
 %\part[10]
 \item \points{1f} \textbf{Pretrain, finetune, and make predictions. Budget 2 hours for training.}\\
 Now fill in the \textit{pretrain} portion of \texttt{src/submission/helper.py}, which will pretrain a model on the span corruption task. Additionally, modify your \textit{finetune} portion to handle finetuning in the case \textit{with} pretraining. In particular, if a path to a pretrained model is provided in the bash command, load this model before finetuning it on the birth-place prediction task.
@@ -176,25 +175,29 @@ Pretrain your model on \texttt{wiki.txt} (which should take approximately two ho
 ./run.sh vanilla_eval_test_with_pretrain
 \end{lstlisting}
 
-%Report the accuracy on the dev set (printed by the third command above). We expect the dev accuracy will be at least 10\%, and will expect a similar accuracy on the held out test set.
-
-%From this section, you'll submit: \texttt{vanilla.finetune.params}, \texttt{vanilla.pretrain.dev.predictions}, \\ and \texttt{vanilla.pretrain.test.predictions}.
+We expect the dev accuracy will be at least 10\%, and will expect a similar accuracy on the held out test set.
 
 \pagebreak % :0 bad LaTeX form but I'm doing it --John
 
-% ISS
 % \part[10]
-\item \points{1g} \textbf{Research! Write and try out the \textit{synthesizer} variant (Budget 2 hours for pretraining!)}\\
-We'll now go to changing the Transformer architecture itself -- specifically, the self-attention module.
-While we've been using a self-attention scoring function based on dot products, this involves a rather intensive computation that's quadratic in the sequence length. This is because the dot product between $\ell^2$ pairs of word vectors is computed in each computation.
-\textit{Synthesized attention} \cite{tay2020synthesizer} is a very recent alternative that has potential benefits by removing this dot product (and quadratic computation) entirely.
+\item \points{1g} \textbf{Research! Write and try out a more efficient variant of Attention (Budget 2 hours for pretraining!)}\\
 
-It's a promising idea, and one way for us to ask, ``What's important/right about the Transformer architecture, and where can we improve/prune aspects of it?''
-In \texttt{attention.py}, implement the \texttt{forward()} method of \texttt{SynthesizerAttention}, which implements a variant of the Synthesizer proposed in the cited paper.
+We'll now go to changing the Transformer architecture itself -- specifically the first and last transformer blocks.
+The transformer model uses a self-attention scoring function based on dot products, this involves a rather intensive computation that's quadratic in the sequence length. This is because the dot product between $\ell^2$ pairs of word vectors is computed in each computation, where $\ell$ is the sequence length. If we can reduce the length of the sequence passed on the self-attention module, we should observe significant reduction in compute. For example, if we develop a technique that can reduce the sequence length to half, we can save around 75\% of the compute time!
 
-The provided \texttt{CausalSelfAttention} implements the following attention for each head of the multi-headed attention:
-Let $X\in \mathbb{R}^{\ell \times d}$ (where $\ell$ is the block size and $d$ is the total dimensionality, $d/h$ is the dimensionality per head.).\footnote{Note that these dimensionalities do not include the minibatch dimension.}
-Let $Q,K,V \in \mathbb{R}^{d\times d/h}$.
+\href{https://arxiv.org/abs/2202.07765}{PerceiverAR} \footnote{\url{https://arxiv.org/abs/2202.07765}} proposes a solution to make the model more efficient by reducing the sequence length of the input to self-attention for the intermediate layers. In the first layer, the input sequence is projected onto a lower-dimensional basis. Subsequently, all self-attention layers operate in this smaller subspace. The last layer projects the output back to the original input sequence length. In this assignment, we propose a simpler version of the PerceiverAR transformer model.
+
+\begin{figure}[h]
+\centering
+\captionsetup{justification=centering}
+\includegraphics[height=0.6\linewidth]{images/decoder.pdf}
+\caption{Illustration of the transformer block.}
+\label{fig:tranformer_block}
+\end{figure}
+
+The provided \texttt{CausalSelfAttention} layer implements the following attention for each head of the multi-headed attention: Let $X\in \mathbb{R}^{\ell \times d}$ (where $\ell$ is the block size and $d$ is the total dimensionality, $d/h$ is the dimensionality per head.).\footnote{Note that these dimensionalities do not include the minibatch dimension.}
+
+Let $Q_i,K_i,V_i \in \mathbb{R}^{d\times d/h}$.
 Then the output of the self-attention head is 
 \begin{equation} \label{qkv_eqn}
 Y_i = \text{softmax}\bigg(\frac{(XQ_i)(XK_i)^\top}{\sqrt{d/h}}\bigg)(XV_i)
@@ -204,57 +207,54 @@ Then the output of the self-attention is a linear transformation of the concaten
 \begin{equation}
 Y = [Y_1;\dots;Y_h]A
 \end{equation}
-were $A \in\mathbb{R}^{d\times d}$ and $[Y_1;\dots;Y_h]\in\mathbb{R}^{\ell \times d}$.
+where $A \in\mathbb{R}^{d\times d}$ and $[Y_1;\dots;Y_h]\in\mathbb{R}^{\ell \times d}$.
 The code also includes dropout layers which we haven't written here.
 We suggest looking at the provided code and noting how this equation is implemented in PyTorch.
+% \AK{TO-DO: Add description of the Block structure.}
 
-Your job is to implement the following variant of attention. Instead of Equation~\ref{qkv_eqn}, implement the following in \texttt{SynthesizerAttention}:
-\begin{equation} 
-Y_i = \text{softmax}\big(\text{ReLU}(XA_i+b_1)B_i + b_2 \big)(XV_i),
+Our model uses this self-attention layer in the transformer block as shown in Figure~\ref{fig:tranformer_block}. As discussed in the lecture, the transformer block contains residual connections and layer normalization layers. If we compare this diagram with the \texttt{Block} code provided in \texttt{model.py}, we notice that the implementation does not perform layer normalization on the output of the MLP (Feed-Forward), but on the input of the \texttt{Block}. This can be considered equivalent since we have a series of transformer blocks on top of each other. 
+
+In the Perceiver model architecture, we replace the first transformer \texttt{Block} in the model with the \texttt{DownProjectBlock}. This block reduces the length of the sequence from $\ell$ to $m$. This is followed by a series of regular transformer blocks, which would now perform self-attention on the reduced sequence length of $m$. We replace the last block of the model with the \texttt{UpProjectBlock}, which takes in the $m$ length output of the previous block, and projects it back to the original sequence length of $\ell$.
+
+You need to implement the \texttt{DownProjectBlock} in \texttt{model.py} that reduces the dimensionality of the sequence in the first block. To do this, perform cross-attention on the input sequence with a learnable basis $C \in \mathbb{R}^{m \times d}$ as the query, where $m < \ell$. Consequently, Equation~\ref{qkv_eqn} becomes: 
+
+\begin{equation}\label{eqn:down_proj_attn}
+Y_i^{(1)} = \text{softmax}\bigg(\frac{(CQ_i)(XK_i)^\top}{\sqrt{d/h}}\bigg)(XV_i)    
 \end{equation}
-where $A_i\in\mathbb{R}^{d \times d/h}$, $B_i\in\mathbb{R}^{d/h\times \ell}$, and $V_i\in\mathbb{R}^{d\times d/h}$.\footnote{Hint: copy over the \texttt{CausalSelfAttention} class, and modify it minimally for this.}
-One way to interpret this is as follows: The term $(XQ_i)(XK_i)^\top$ is an $\ell \times \ell$ matrix of attention scores, computed as all pairs of dot products between word embeddings.
-The synthesizer variant eschews the all-pairs dot product and directly computes the $\ell \times \ell$ matrix of attention scores by mapping each $d$-dimensional vector of each head for $X$ to an $\ell$-dimesional vector of unnormalized attention weights.
 
-%In the rest of the code in the \texttt{src/} folder, make modifications to your model such that you can construct an otherwise-identical model with your new synthesizer attention , and add the ability to switch between attention types to \texttt{run.py} (marked \texttt{[part g]} in the code).
-In the rest of the code in the \texttt{src/submission/helper.py} folder, modify your model to support using either \texttt{CausalSelfAttention} or \texttt{SynthesizerAttention}. Add the ability to switch between these attention variants depending on whether ``vanilla'' (for causal self-attention) or ``synthesizer'' (for the synthesizer variant) is selected in the command line arguments (see the section marked \texttt{[part g]} in \texttt{src/submission/helper.py}). 
+resulting in $Y_i^{(1)} \in\mathbb{R}^{m\times d}$, with $^{(1)}$ denoting that the output corresponds to the first layer. With this dimensionality reduction, the subsequent \texttt{CausalSelfAttention} layers operate on inputs $\in \mathbb{R}^{m\times d}$ instead of $\mathbb{R}^{l\times d}$. We refer to $m$ as the \texttt{bottleneck\_dim} in code. Note that for implementing Equation~\ref{eqn:down_proj_attn}, we need to perform cross attention between the learnable basis $C$ and the input sequence. This has been provided to you as the \texttt{CausalCrossAttention} layer. We recommend reading through \texttt{attention.py} to understand how to use the cross-attention layer, and map which arguments correspond to the key, value and query inputs. Initialize the basis vector matrix $C$ using Xavier Uniform initialization.
+
+To get back to the original dimensions, the last block in the model is replaced with the \texttt{UpProjectBlock}. This block will bring back the output sequence length to be the same as input sequence length  by performing cross-attention on the previous layer's output $Y^{L-1}$ with the original input vector $X$ as the query:
+
+\begin{equation}\label{eqn:up_proj_attn}
+Y_i^{(L)} = \text{softmax}\bigg(\frac{(XQ_i)(Y^{(L-1)}K_i)^\top}{\sqrt{d/h}}\bigg)(Y^{(L-1)}V_i)
+\end{equation}
+where $L$ is the total number of layers. This results in the final output vector having the same dimension as expected in the original \texttt{CausalSelfAttention} mechanism. Implement this functionality in the \texttt{UpProjectBlock} in \texttt{src/submission/model.py}.
+
+We provide the code to assemble the model using your implemented \texttt{DownProjectBlock} and \texttt{UpProjectBlock}. The model uses these blocks when the \texttt{variant} parameter is specified as \texttt{perceiver}.
+
+
+In the rest of the code in the \texttt{src/submission/helper.py}, modify your model to support using either \texttt{CausalSelfAttention} or \texttt{CausalCrossAttention}. Add the ability to switch between these attention variants depending on whether ``vanilla'' (for causal self-attention) or ``perceiver'' (for the perceiver variant) is selected in the command line arguments (see the section marked \texttt{[part g]} in \texttt{src/submission/helper.py}). 
+
 
 Below are bash commands that your code should support in order to pretrain the model, finetune it, and make predictions on the dev and test sets.
 Note that the pretraining process will take approximately 2 hours.
+
+Your model should get at least 6\% accuracy on the dev set.
+
 \begin{lstlisting}[language=bash]
-# Pretrain the model
-./run.sh synthesizer_pretrain
-        
-# Finetune the model
-./run.sh synthesizer_finetune_with_pretrain
-        
-# Evaluate on the dev set; write to disk
-./run.sh synthesizer_eval_dev_with_pretrain
-        
-# Evaluate on the test set; write to disk
-./run.sh synthesizer_eval_test_with_pretrain
-\end{lstlisting}
-
-%Report the accuracy of your synthesizer attention model on birth-place prediction on \texttt{birth\_dev.tsv} after pretraining and fine-tuning.
-
-%Save the predictions of the model on \texttt{wiki\_places\_test.tsv} to \texttt{synthesizer.pretrain.test.predictions}.
-
-%From this section, you'll submit: \texttt{synthesizer.finetune.params}, \texttt{synthesizer.pretrain.dev.predictions},\\ and \texttt{synthesizer.pretrain.test.predictions}.
-    
-% ISS
-% \begin{subparts}
-% \subpart[8]
-    %\begin{enumerate}[label=\roman*.]
-    % paritial point, manual
-    %\item (9 points) We'll score your model as to whether it gets at least 5\% accuracy on the test set, which has answers held out.
-    %\item We'll score your model using held out dataset.
-    %\item We'll score your model as to whether it gets at least 5\% accuracy on the test set, which has answers held out.
-    % ISS
-    % \subpart[2]
-    % paritial point, manual
-    % ISS skip
-    %\item (4 points) Why might the \textit{synthesizer} self-attention not be able to do, in a single layer, what the key-query-value self-attention can do?
-    %\end{enumerate}
+        # Pretrain the model
+        ./run.sh perceiver_pretrain
+                
+        # Finetune the model
+        ./run.sh perceiver_finetune_with_pretrain
+                
+        # Evaluate on the dev set; write to disk
+        ./run.sh perceiver_eval_dev_with_pretrain
+                
+        # Evaluate on the test set; write to disk
+        ./run.sh perceiver_eval_test_with_pretrain
+        \end{lstlisting}
 
 \end{enumerate}
 
@@ -269,7 +269,10 @@ Note that the pretraining process will take approximately 2 hours.
 
 \textbf{Deliverables}
 
-For this assignment, please submit the following files within the src/submission directory. This includes:
+For this assignment, please submit the following files within the src/submission directory.
+Update files without directory structure.
+
+This includes:
 
 \begin{enumerate}
         \item \texttt{src/submission/\_\_init\_\_.py}
@@ -286,9 +289,9 @@ For this assignment, please submit the following files within the src/submission
         \item \texttt{src/submission/vanilla.finetune.params}
         \item \texttt{src/submission/vanilla.pretrain.dev.predictions}
         \item \texttt{src/submission/vanilla.pretrain.test.predictions}
-        \item \texttt{src/submission/synthesizer.pretrain.params}
-        \item \texttt{src/submission/synthesizer.finetune.params}
-        \item \texttt{src/submission/synthesizer.pretrain.dev.predictions}
-        \item \texttt{src/submission/synthesizer.pretrain.test.predictions}
+        \item \texttt{src/submission/perceiver.pretrain.params}
+        \item \texttt{src/submission/perceiver.finetune.params}
+        \item \texttt{src/submission/perceiver.pretrain.dev.predictions}
+        \item \texttt{src/submission/perceiver.pretrain.test.predictions}
 \end{enumerate}
 
