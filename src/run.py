@@ -29,10 +29,19 @@ import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from torch.utils.tensorboard import SummaryWriter
 from torch.nn import functional as F
 import random
 random.seed(0)
+
+try:
+    from torch.utils.tensorboard import SummaryWriter
+except ImportError:
+    print("{}: Import failed!".format(__file__))
+    print("\033[1;31;40mRun the following command.\033[0m")
+    print()
+    print(">>> pip install tensorboard")
+    print()
+    sys.exit()
 
 from submission import (
     GPT, GPTConfig, CharCorruptionDataset, NameDataset, TrainerConfig, Trainer, 
