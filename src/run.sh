@@ -38,26 +38,26 @@ elif [ "$1" = "vanilla_eval_test_with_pretrain" ]; then
 	else
 		echo "'./submission/vanilla.finetune.params' does not exist. Please run './run.sh vanilla_finetune_with_pretrain' on the VM to create this file."
 	fi
-elif [ "$1" = "synthesizer_pretrain" ]; then
-	echo "Starting Synthesizer Pretrain: ~ 2 Hours"
-	python run.py $ARG_COMPILE $ARG_BACKEND --function=pretrain --variant=synthesizer --pretrain_corpus_path=./data/wiki.txt --writing_params_path=./submission/synthesizer.pretrain.params	
-elif [ "$1" = "synthesizer_finetune_with_pretrain" ]; then
-	if [ -f ./submission/synthesizer.pretrain.params ]; then
-		python run.py $ARG_COMPILE $ARG_BACKEND --function=finetune --variant=synthesizer --pretrain_corpus_path=./data/wiki.txt --reading_params_path=./submission/synthesizer.pretrain.params --writing_params_path=./submission/synthesizer.finetune.params --finetune_corpus_path=./data/birth_places_train.tsv
+elif [ "$1" = "perceiver_pretrain" ]; then
+	echo "Starting Perceiver Pretrain: ~ 2 Hours"
+	python run.py $ARG_COMPILE $ARG_BACKEND --function=pretrain --variant=perceiver --pretrain_corpus_path=./data/wiki.txt --writing_params_path=./submission/perceiver.pretrain.params	
+elif [ "$1" = "perceiver_finetune_with_pretrain" ]; then
+	if [ -f ./submission/perceiver.pretrain.params ]; then
+		python run.py $ARG_COMPILE $ARG_BACKEND --function=finetune --variant=perceiver --pretrain_corpus_path=./data/wiki.txt --reading_params_path=./submission/perceiver.pretrain.params --writing_params_path=./submission/perceiver.finetune.params --finetune_corpus_path=./data/birth_places_train.tsv
 	else
-		echo "'./submission/synthesizer.pretrain.params' does not exist. Please run './run.sh synthesizer_finetune_with_pretrain' on the VM to create this file. Note: will take around 2 hours."
+		echo "'./submission/perceiver.pretrain.params' does not exist. Please run './run.sh perceiver_finetune_with_pretrain' on the VM to create this file. Note: will take around 2 hours."
 	fi
-elif [ "$1" = "synthesizer_eval_dev_with_pretrain" ]; then
-	if [ -f ./submission/synthesizer.finetune.params ]; then
-		python run.py $ARG_COMPILE $ARG_BACKEND --function=evaluate --variant=synthesizer --pretrain_corpus_path=./data/wiki.txt --reading_params_path=./submission/synthesizer.finetune.params --eval_corpus_path=./data/birth_dev.tsv --outputs_path=./submission/synthesizer.pretrain.dev.predictions	
+elif [ "$1" = "perceiver_eval_dev_with_pretrain" ]; then
+	if [ -f ./submission/perceiver.finetune.params ]; then
+		python run.py $ARG_COMPILE $ARG_BACKEND --function=evaluate --variant=perceiver --pretrain_corpus_path=./data/wiki.txt --reading_params_path=./submission/perceiver.finetune.params --eval_corpus_path=./data/birth_dev.tsv --outputs_path=./submission/perceiver.pretrain.dev.predictions	
 	else
-		echo "'./submission/synthesizer.finetune.params' does not exist. Please run './run.sh vanilla_finetune_with_pretrain' on the VM to create this file."
+		echo "'./submission/perceiver.finetune.params' does not exist. Please run './run.sh vanilla_finetune_with_pretrain' on the VM to create this file."
 	fi
-elif [ "$1" = "synthesizer_eval_test_with_pretrain" ]; then
-	if [ -f ./submission/synthesizer.finetune.params ]; then
-		python run.py $ARG_COMPILE $ARG_BACKEND --function=evaluate --variant=synthesizer --pretrain_corpus_path=./data/wiki.txt --reading_params_path=./submission/synthesizer.finetune.params --eval_corpus_path=./data/birth_test_inputs.tsv --outputs_path=./submission/synthesizer.pretrain.test.predictions	
+elif [ "$1" = "perceiver_eval_test_with_pretrain" ]; then
+	if [ -f ./submission/perceiver.finetune.params ]; then
+		python run.py $ARG_COMPILE $ARG_BACKEND --function=evaluate --variant=perceiver --pretrain_corpus_path=./data/wiki.txt --reading_params_path=./submission/perceiver.finetune.params --eval_corpus_path=./data/birth_test_inputs.tsv --outputs_path=./submission/perceiver.pretrain.test.predictions	
 	else
-		echo "'./submission/synthesizer.finetune.params' does not exist. Please run './run.sh vanilla_finetune_with_pretrain' on the VM to create this file."
+		echo "'./submission/perceiver.finetune.params' does not exist. Please run './run.sh vanilla_finetune_with_pretrain' on the VM to create this file."
 	fi 
 else
 	echo "Invalid Option Selected. Only Options Available Are:"
@@ -71,9 +71,9 @@ else
 	echo "./run.sh vanilla_eval_dev_with_pretrain"
 	echo "./run.sh vanilla_eval_test_with_pretrain"
 	echo "------------------------------------------------------------"
-	echo "./run.sh synthesizer_pretrain"
-	echo "./run.sh synthesizer_finetune_with_pretrain"
-	echo "./run.sh synthesizer_eval_dev_with_pretrain"
-	echo "./run.sh synthesizer_eval_test_with_pretrain"
+	echo "./run.sh perceiver_pretrain"
+	echo "./run.sh perceiver_finetune_with_pretrain"
+	echo "./run.sh perceiver_eval_dev_with_pretrain"
+	echo "./run.sh perceiver_eval_test_with_pretrain"
 	echo "------------------------------------------------------------"
 fi

@@ -36,7 +36,8 @@ class sample_GPTConfig:
     embd_pdrop = 0.1
     resid_pdrop = 0.1
     attn_pdrop = 0.1
-    synthesizer = False
+    perceiver = False
+    bottleneck_dim = None
 
     def __init__(self, vocab_size, block_size, **kwargs):
         self.vocab_size = vocab_size
@@ -229,12 +230,12 @@ class Test_1g(GradedTestCase):
   def setUp(self):
     self.pretrain_dataset = submission.CharCorruptionDataset(PRETRAIN_TEXT, BLOCK_SIZE)
     self.mconf = submission.GPTConfig(self.pretrain_dataset.vocab_size, self.pretrain_dataset.block_size, n_layer=4, n_head=8, n_embd=256)
-    self.synthesizer_model = submission.initialize_synthesizer_model(self.mconf)
+    self.perceiver_model = submission.initialize_perceiver_model(self.mconf)
 
   @graded(timeout=15)
   def test_0(self):
-    """1g-0-basic:  correct trainer object initialization for finetune with pretraining for synthesizer"""
-    student_trainer_conf, student_trainer = submission.finetune('./submission/synthesizer.pretrain.params', './data/birth_places_train.tsv', self.pretrain_dataset, BLOCK_SIZE, self.synthesizer_model)
+    """1g-0-basic:  correct trainer object initialization for finetune with pretraining for perceiver"""
+    student_trainer_conf, student_trainer = submission.finetune('./submission/perceiver.pretrain.params', './data/birth_places_train.tsv', self.pretrain_dataset, BLOCK_SIZE, self.perceiver_model)
     
     self.assertEqual(student_trainer_conf.max_epochs, 10)
     self.assertEqual(student_trainer_conf.batch_size, 256)
@@ -250,35 +251,20 @@ class Test_1g(GradedTestCase):
 
   @graded(is_hidden=True)
   def test_1(self):
-    """1g-1-hidden:   test the dev score for synthesizer attention with pretrain"""
+    """1g-1-hidden:   test the dev score for perceiver attention with pretrain"""
     n_correct, n_total = score_preds(
-        "./submission/synthesizer.pretrain.dev.predictions",
+        "./submission/perceiver.pretrain.dev.predictions",
         "./data/birth_dev.tsv")
-    self.assertGreaterEqual(n_correct / n_total, 0.05)
+    self.assertGreaterEqual(n_correct / n_total, 0.028)
   
   @graded(is_hidden=True)
   def test_2(self):
-    """1g-2-hidden:   test the test score for synthesizer attention with pretrain"""
+    """1g-2-hidden:   test the test score for perceiver attention with pretrain"""
     n_correct, n_total = score_preds(
-        "./submission/synthesizer.pretrain.test.predictions",
+        "./submission/perceiver.pretrain.test.predictions",
         "./data/birth_test.tsv")
-    self.assertGreaterEqual(n_correct / n_total, 0.04)
+    self.assertGreaterEqual(n_correct / n_total, 0.025)
   
-  @graded(is_hidden=True)
-  def test_3(self):
-    """1g-3-hidden:   check if synthesizer attention values match"""
-    mconf = sample_GPTConfig(5, 8, n_layer=1, n_head=3, n_embd=6)
-    att_student = submission.SynthesizerAttention(mconf)
-    att_expected = self.run_with_solution_if_possible(submission, lambda sub_or_sol:sub_or_sol).SynthesizerAttention(mconf)
-    att_student.eval()
-    att_expected.eval()
-    att_student.load_state_dict(att_expected.state_dict())
-    with torch.no_grad():
-        x = torch.randn(11, 7, 6)
-        y_sol = att_expected(x)
-        y_stu = att_student(x)
-    self.assertLess(torch.norm(y_sol - y_stu), 1e-8)
-
 def getTestCaseForTestID(test_id):
   question, part, _ = test_id.split('-')
   g = globals().copy()

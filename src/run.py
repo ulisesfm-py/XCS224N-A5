@@ -11,15 +11,20 @@ Options:
     --no-compile                            do not compile the model
     --backend=<str>                         backend to be used for compilation [default: inductor] {inductor,aot_eager,cudagraphs}
     --function=<function>                   Whether to 'pretrain', 'finetune' or 'evaluate' a model
-    --variant=<attention-model>             Which variant of the model to run ('vanilla' or 'synthesizer')
+    --variant=<attention-model>             Which variant of the model to run ('vanilla', 'perceiver')
     --pretrain_corpus_path=<file>           Path of the corpus to pretrain on
     --writing_params_path=<file>            Path to save the model after pretraining/finetuning
     --reading_params_path=<file>            If specified, path of the model to load before finetuning/evaluation
     --finetune_corpus_path=<file>           Path of the corpus to finetune on
     --eval_corpus_path=<file>               Path of the corpus to evaluate on
     --outputs_path=<file>                   File to output predictions
+    --tb_expt_name=<str>                    debug string for tb log [default: run]
+    --bottleneck_dim=<n>                    bottleneck dim [default: 32]
+    --pretrain_lr=<value>                   pretraining lr [default: 6e-3]
+    --finetune_lr=<value>                   finetuning lr [default: 6e-4]
 """
 from docopt import docopt
+from datetime import datetime
 import numpy as np
 import torch
 import torch.nn as nn
@@ -28,17 +33,31 @@ from torch.nn import functional as F
 import random
 random.seed(0)
 
+try:
+    from torch.utils.tensorboard import SummaryWriter
+except ImportError:
+    print("{}: Import failed!".format(__file__))
+    print("\033[1;31;40mRun the following command.\033[0m")
+    print()
+    print(">>> pip install tensorboard")
+    print()
+    sys.exit()
+
 from submission import (
     GPT, GPTConfig, CharCorruptionDataset, NameDataset, TrainerConfig, Trainer, 
-    evaluate_places, sample, initialize_vanilla_model, initialize_synthesizer_model,
+    evaluate_places, sample, initialize_vanilla_model, initialize_perceiver_model,
     finetune, pretrain, train
 )
 
 def create_model(args, mconf):
     if args['--variant'] == 'vanilla':
         return initialize_vanilla_model(mconf)
+    elif args['--variant'] == 'perceiver':
+        bottleneck_dim = int(args["--bottleneck_dim"])
+        return initialize_perceiver_model(mconf, bottleneck_dim)
     else:
-        return initialize_synthesizer_model(mconf)
+        print("Invalid --variant")
+        assert False
 
 def evaluate(args, pretrain_dataset, device, model):
     assert args['--outputs_path'] is not None
@@ -97,12 +116,25 @@ def main():
     pretrain_dataset = CharCorruptionDataset(text, block_size)
 
     # We don't suggest you change these hyperparameters, as they're known to work.
-    # use them for both the vanilla and the synthesizer models
+    # use them for both the vanilla and the perceiver models
     mconf = GPTConfig(pretrain_dataset.vocab_size, pretrain_dataset.block_size,
         n_layer=4, n_head=8, n_embd=256)
 
     # Create model
     attention_model = create_model(args, mconf)
+
+    datetime_str = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    # TensorBoard training log
+    writer = SummaryWriter(log_dir='expt/%s/%s_%s_%d_pt_lr_%f_ft_lr_%f_%s' % (
+        args['--function'],
+        args['--tb_expt_name'],
+        args['--variant'],
+        int(args['--bottleneck_dim']),
+        float(args['--pretrain_lr']),
+        float(args['--finetune_lr']),
+        datetime_str))
+
 
     if(args["--compile"] == True):
         try:
@@ -117,12 +149,14 @@ def main():
         #TODO: Create new function to handle trainer initialization
         assert args['--finetune_corpus_path'] is not None
         assert args['--writing_params_path'] is not None
-        _, trainer_obj = finetune(args['--reading_params_path'], args['--finetune_corpus_path'], pretrain_dataset, block_size, attention_model)
+        reading_params_path, finetune_corpus_path, finetune_lr  = args['--reading_params_path'], args['--finetune_corpus_path'], float(args['--finetune_lr'])
+        _, trainer_obj = finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_size, attention_model, finetune_lr, writer)
         train(attention_model, args['--writing_params_path'], trainer_obj)
     elif args['--function'] == "pretrain":
         assert args['--pretrain_corpus_path'] is not None
         assert args['--writing_params_path'] is not None
-        _, trainer_obj = pretrain(pretrain_dataset, block_size, attention_model)
+        pretrain_lr = float(args['--pretrain_lr'])
+        _, trainer_obj = pretrain(pretrain_dataset, block_size, attention_model, pretrain_lr, writer)
         train(attention_model, args['--writing_params_path'], trainer_obj)
     else:
         evaluate(args, pretrain_dataset, device, attention_model)

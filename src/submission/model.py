@@ -6,6 +6,13 @@ GPT model:
     - each Transformer is a sequential combination of a 1-hidden-layer MLP block and a self-attention block
     - all blocks feed into a central residual pathway similar to resnets
 - the final decoder is a linear projection into a vanilla Softmax classifier
+
+Originally forked from Andrej Karpathy's minGPT.
+
+XCS224N : Homework 5
+
+John Hewitt <johnhew@stanford.edu>
+Ansh Khurana <anshk@stanford.edu>
 """
 
 import math
@@ -14,14 +21,15 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from .attention import SynthesizerAttention, CausalSelfAttention
+from .attention import CausalSelfAttention, CausalCrossAttention
 
 class GPTConfig:
     """ base GPT config, params common to all GPT versions """
     embd_pdrop = 0.1
     resid_pdrop = 0.1
     attn_pdrop = 0.1
-    synthesizer = False
+    perceiver = False
+    bottleneck_dim = None
 
     def __init__(self, vocab_size, block_size, **kwargs):
         self.vocab_size = vocab_size
@@ -42,10 +50,7 @@ class Block(nn.Module):
         super().__init__()
         self.ln1 = nn.LayerNorm(config.n_embd)
         self.ln2 = nn.LayerNorm(config.n_embd)
-        if config.synthesizer:
-            self.attn = SynthesizerAttention(config)
-        else:
-            self.attn = CausalSelfAttention(config)
+        self.attn = CausalSelfAttention(config)
         self.mlp = nn.Sequential(
             nn.Linear(config.n_embd, 4 * config.n_embd),
             nn.GELU(),
@@ -58,6 +63,71 @@ class Block(nn.Module):
         x = x + self.mlp(self.ln2(x))
         return x
 
+class DownProjectBlock(nn.Module):
+    """Transformer block used for down projection.
+    
+    Initialize similarly to the regular transformer Block class,
+    while using the CausalCrossAttention layer instead of the regular
+    CausalSelfAttention layer.
+    
+    You also need to initialize the parameter for the basis vectors `self.C` here.
+    Initialize `self.C` with appropriate dimensions and xavier_uniform initialization.
+    
+    self.C should be 1 x bottleneck_dim x n_embd. We need the first dimension 
+    for appropriate broadcasting along the batch_size dimension of the input 
+    sequence.
+    
+    `self.C` will be used to compute the Query vector for the cross attention
+    layer.
+    """
+    def __init__(self, config):
+        super().__init__()
+
+        ### [part g]: Write your DownProjectBlock below.
+        ### Hint: Copy over the code from Block and make necessary modifications.
+
+        ### START CODE HERE 
+        ### END CODE HERE
+
+    def forward(self, x_input):
+        """Hint: perform cross-attention between x_input and self.C.
+        Use the layernorm layers on C, and then on the input to the MLP.
+        """
+        ### [part g]: Write your DownProjectBlock below.
+        ### Hint: Copy over the code from Block and make necessary modifications.
+        ### Should be around 3-5 lines.
+
+        ### START CODE HERE 
+        ### END CODE HERE
+    
+    
+class UpProjectBlock(nn.Module):
+    """Transformer block used for up projection.
+    
+    Initialize similarly to the regular transformer Block class,
+    while using the CausalCrossAttention layer instead of the regular
+    CausalSelfAttention layer.
+    """
+    def __init__(self, config):
+        super().__init__()
+        ### [part g]: Write your DownProjectBlock below.
+        ### Hint: Copy over the code from Block and make necessary modifications.
+
+        ### START CODE HERE 
+        ### END CODE HERE
+    
+    def forward(self, y, x_input):
+        """Hint: perform cross-attention between previous layer's output y and
+        x_input. 
+        Use the layernorm layers on y, and then on the input to the MLP.
+        """
+        ### [part g]: Write your DownProjectBlock below.
+        ### Hint: Copy over the code from Block and make necessary modifications.
+        ### Should be around 3-5 lines.
+
+        ### START CODE HERE 
+        ### END CODE HERE
+
 class GPT(nn.Module):
     """  the full GPT language model, with a context size of block_size """
 
@@ -69,7 +139,24 @@ class GPT(nn.Module):
         self.pos_emb = nn.Parameter(torch.zeros(1, config.block_size, config.n_embd))
         self.drop = nn.Dropout(config.embd_pdrop)
         # transformer
-        self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer)])
+        self.perceiver = config.perceiver
+        if config.perceiver:            
+            input_block_size = config.block_size
+            
+            # input sequence based causal mask
+            self.down_block = DownProjectBlock(config)
+            
+            # bottleneck basis based causal mask
+            config.block_size = config.bottleneck_dim
+            self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer-2)])
+            
+            # reset value of the block size back to the original.
+            config.block_size = input_block_size
+            self.up_block = UpProjectBlock(config)
+            
+            
+        else:
+            self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer)])
         # decoder head
         self.ln_f = nn.LayerNorm(config.n_embd)
         self.head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
@@ -93,13 +180,24 @@ class GPT(nn.Module):
 
     def forward(self, idx, targets=None):
         b, t = idx.size()
-        assert t <= self.block_size, "Cannot forward, model block size is exhausted."
+        assert t <= self.block_size, "Cannot forward, model block size (%d, %d) is exhausted." % (t, self.block_size)
 
         # forward the GPT model
         token_embeddings = self.tok_emb(idx) # each index maps to a (learnable) vector
         position_embeddings = self.pos_emb[:, :t, :] # each position maps to a (learnable) vector
-        x = self.drop(token_embeddings + position_embeddings)
+        x_input = self.drop(token_embeddings + position_embeddings)
+        
+        if self.perceiver:
+            x = self.down_block(x_input)
+        else:
+            x = x_input
+        
+        # always compute through the blocks
         x = self.blocks(x)
+        
+        if self.perceiver:
+            x = self.up_block(x, x_input)
+            
         x = self.ln_f(x)
         logits = self.head(x)
 
@@ -109,6 +207,3 @@ class GPT(nn.Module):
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=0)
 
         return logits, loss
-
-class CustomLayerNorm(nn.Module):
-  pass
