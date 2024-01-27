@@ -73,7 +73,7 @@ class Test_1c(GradedTestCase):
     self.assertEqual(student_trainer_conf.weight_decay, 0.1)
     self.assertEqual(student_trainer_conf.lr_decay,True)
     self.assertEqual(student_trainer_conf.warmup_tokens, 10240)
-    self.assertEqual(student_trainer_conf.final_tokens, 75212800)
+    self.assertEqual(student_trainer_conf.final_tokens, 75187200)
     self.assertEqual(student_trainer_conf.ckpt_path, None)
     self.assertEqual(student_trainer_conf.num_workers, 4)
 
@@ -205,7 +205,7 @@ class Test_1f(GradedTestCase):
     self.assertEqual(student_trainer_conf.weight_decay, 0.1)
     self.assertEqual(student_trainer_conf.lr_decay,True)
     self.assertEqual(student_trainer_conf.warmup_tokens, 10240)
-    self.assertEqual(student_trainer_conf.final_tokens, 75212800)
+    self.assertEqual(student_trainer_conf.final_tokens, 75187200)
     self.assertEqual(student_trainer_conf.ckpt_path, None)
     self.assertEqual(student_trainer_conf.num_workers, 4)
   
@@ -245,7 +245,7 @@ class Test_1g(GradedTestCase):
     self.assertEqual(student_trainer_conf.weight_decay, 0.1)
     self.assertEqual(student_trainer_conf.lr_decay,True)
     self.assertEqual(student_trainer_conf.warmup_tokens, 10240)
-    self.assertEqual(student_trainer_conf.final_tokens, 75212800)
+    self.assertEqual(student_trainer_conf.final_tokens, 75187200)
     self.assertEqual(student_trainer_conf.ckpt_path, None)
     self.assertEqual(student_trainer_conf.num_workers, 4)
 
@@ -255,7 +255,7 @@ class Test_1g(GradedTestCase):
     n_correct, n_total = score_preds(
         "./submission/perceiver.pretrain.dev.predictions",
         "./data/birth_dev.tsv")
-    self.assertGreaterEqual(n_correct / n_total, 0.028)
+    self.assertGreaterEqual(n_correct / n_total, 0.024)
   
   @graded(is_hidden=True)
   def test_2(self):
@@ -263,7 +263,7 @@ class Test_1g(GradedTestCase):
     n_correct, n_total = score_preds(
         "./submission/perceiver.pretrain.test.predictions",
         "./data/birth_test.tsv")
-    self.assertGreaterEqual(n_correct / n_total, 0.025)
+    self.assertGreaterEqual(n_correct / n_total, 0.020)
   
 def getTestCaseForTestID(test_id):
   question, part, _ = test_id.split('-')

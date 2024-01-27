@@ -65,18 +65,18 @@ class Block(nn.Module):
 
 class DownProjectBlock(nn.Module):
     """Transformer block used for down projection.
-    
+
     Initialize similarly to the regular transformer Block class,
     while using the CausalCrossAttention layer instead of the regular
     CausalSelfAttention layer.
-    
+
     You also need to initialize the parameter for the basis vectors `self.C` here.
     Initialize `self.C` with appropriate dimensions and xavier_uniform initialization.
-    
-    self.C should be 1 x bottleneck_dim x n_embd. We need the first dimension 
-    for appropriate broadcasting along the batch_size dimension of the input 
+
+    self.C should be 1 x bottleneck_dim x n_embd. We need the first dimension
+    for appropriate broadcasting along the batch_size dimension of the input
     sequence.
-    
+
     `self.C` will be used to compute the Query vector for the cross attention
     layer.
     """
@@ -86,7 +86,7 @@ class DownProjectBlock(nn.Module):
         ### [part g]: Write your DownProjectBlock below.
         ### Hint: Copy over the code from Block and make necessary modifications.
 
-        ### START CODE HERE 
+        ### START CODE HERE
         ### END CODE HERE
 
     def forward(self, x_input):
@@ -97,35 +97,35 @@ class DownProjectBlock(nn.Module):
         ### Hint: Copy over the code from Block and make necessary modifications.
         ### Should be around 3-5 lines.
 
-        ### START CODE HERE 
+        ### START CODE HERE
         ### END CODE HERE
-    
-    
+
+
 class UpProjectBlock(nn.Module):
     """Transformer block used for up projection.
-    
+
     Initialize similarly to the regular transformer Block class,
     while using the CausalCrossAttention layer instead of the regular
     CausalSelfAttention layer.
     """
     def __init__(self, config):
         super().__init__()
-        ### [part g]: Write your DownProjectBlock below.
+        ### [part g]: Write your UpProjectBlock below.
         ### Hint: Copy over the code from Block and make necessary modifications.
 
-        ### START CODE HERE 
+        ### START CODE HERE
         ### END CODE HERE
-    
+
     def forward(self, y, x_input):
         """Hint: perform cross-attention between previous layer's output y and
-        x_input. 
+        x_input.
         Use the layernorm layers on y, and then on the input to the MLP.
         """
         ### [part g]: Write your DownProjectBlock below.
         ### Hint: Copy over the code from Block and make necessary modifications.
         ### Should be around 3-5 lines.
 
-        ### START CODE HERE 
+        ### START CODE HERE
         ### END CODE HERE
 
 class GPT(nn.Module):
@@ -140,21 +140,21 @@ class GPT(nn.Module):
         self.drop = nn.Dropout(config.embd_pdrop)
         # transformer
         self.perceiver = config.perceiver
-        if config.perceiver:            
+        if config.perceiver:
             input_block_size = config.block_size
-            
+
             # input sequence based causal mask
             self.down_block = DownProjectBlock(config)
-            
+
             # bottleneck basis based causal mask
             config.block_size = config.bottleneck_dim
             self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer-2)])
-            
+
             # reset value of the block size back to the original.
             config.block_size = input_block_size
             self.up_block = UpProjectBlock(config)
-            
-            
+
+
         else:
             self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer)])
         # decoder head
@@ -186,18 +186,18 @@ class GPT(nn.Module):
         token_embeddings = self.tok_emb(idx) # each index maps to a (learnable) vector
         position_embeddings = self.pos_emb[:, :t, :] # each position maps to a (learnable) vector
         x_input = self.drop(token_embeddings + position_embeddings)
-        
+
         if self.perceiver:
             x = self.down_block(x_input)
         else:
             x = x_input
-        
+
         # always compute through the blocks
         x = self.blocks(x)
-        
+
         if self.perceiver:
             x = self.up_block(x, x_input)
-            
+
         x = self.ln_f(x)
         logits = self.head(x)
 
