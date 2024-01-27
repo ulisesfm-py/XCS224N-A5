@@ -23,8 +23,8 @@ You don't need to implement anything in NameDataset.
 
 class NameDataset(Dataset):
     def __init__(self, data, pretraining_dataset):
-        self.MASK_CHAR = u"\u2047" # the doublequestionmark character, for mask
-        self.PAD_CHAR = u"\u25A1" # the empty square character, for pad
+        self.MASK_CHAR = pretraining_dataset.MASK_CHAR # the doublequestionmark character, for mask
+        self.PAD_CHAR = pretraining_dataset.PAD_CHAR # the empty square character, for pad
         self.itos = pretraining_dataset.itos 
         self.stoi = pretraining_dataset.stoi 
         self.block_size = pretraining_dataset.block_size
@@ -45,7 +45,6 @@ class NameDataset(Dataset):
         y = torch.tensor([self.stoi[c] for c in y], dtype=torch.long)
         return x, y
 
-
 """
 [part e]
 
@@ -54,6 +53,8 @@ Do not change the signature of the __init__ or __getitem__ functions.
 
 Make sure to implement the full spec for full credit -- we list below the
 criteria that must be satisfied for a full implementation.
+
+Note: you will find `random.randint` useful for this part of the assignment.
 
 --------------
 Vocabulary Specification
@@ -87,11 +88,11 @@ sequence, and y encodes the output sequence.
 at the given index. We'll call the resulting data entry a document.
 
 1. Randomly truncate the document to a length no less than 4 characters,
-and no more than int(self.block_size*7/8) characters.
+and no more than int(self.block_size*3/4) characters.
 
 - IMPORTANT: You are free to decide how to perform this random truncation, but
 make sure that the length is picked _randomly_ (every possible length from 4
-to int(self.block_size*7/8) has a chance of being picked) for full credit.
+to int(self.block_size*3/4) has a chance of being picked) for full credit.
 
 2. Now, break the (truncated) document into three substrings:
     
