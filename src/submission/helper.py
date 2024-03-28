@@ -109,6 +109,5 @@ def train(model, writing_params_path, trainer_obj):
 
     # START CODE HERE
     trainer_obj.train()
-    torch.save(model.state_dict(), writing_params_path)
     # END CODE HERE
     return
