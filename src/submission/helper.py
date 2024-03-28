@@ -69,7 +69,14 @@ def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_
     tconf = TrainerConfig(max_epochs=75, batch_size=256, learning_rate=6e-4, lr_decay=True,
                           warmup_tokens=512*20, final_tokens=200*len(pretrain_dataset)*block_size,
                           num_workers=4)
-    trainer_obj = Trainer(model, pretrain_dataset, None, tconf)
+
+    # Assuming 'pretrain_dataset' is an instance of CharCorruptionDataset for vocabulary
+    # Load fine-tuning data
+    finetune_data = open(finetune_corpus_path, encoding='utf-8').read()
+    # Initialize NameDataset with fine-tuning data and pretraining dataset for vocabulary
+    finetune_dataset = NameDataset(finetune_data, pretrain_dataset)
+
+    trainer_obj = Trainer(model, finetune_dataset, None, tconf)
     # END CODE HERE
     return tconf, trainer_obj
 
@@ -109,5 +116,6 @@ def train(model, writing_params_path, trainer_obj):
 
     # START CODE HERE
     trainer_obj.train()
+    torch.save(model.state_dict(), writing_params_path)
     # END CODE HERE
     return
