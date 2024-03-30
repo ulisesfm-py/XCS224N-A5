@@ -61,21 +61,24 @@ def finetune(reading_params_path, finetune_corpus_path, pretrain_dataset, block_
     ###
     # Note: Please use torch.load(reading_params_path, map_location=torch.device('cpu')) to load pretrained model
 
-    trainer_obj = None  # Trainer object (see trainer.py for more details)
-    tconf = None  # TrainerConfig object (see trainer.py for more details)
-    # START CODE HERE
+    # If a pretrained model is specified, load its parameters
+    if reading_params_path is not None:
+        model.load_state_dict(torch.load(
+            reading_params_path, map_location=torch.device('cpu')))
 
-    # initialize a trainer instance
-    tconf = TrainerConfig(max_epochs=75, batch_size=256, learning_rate=6e-4, lr_decay=True,
+    # Hyperparameters should be adjusted if finetuning WITH a pretrained model
+    # Shorter training if preloaded
+    max_epochs = 10 if reading_params_path is not None else 75
+
+    tconf = TrainerConfig(max_epochs=max_epochs, batch_size=256, learning_rate=finetune_lr, lr_decay=True,
                           warmup_tokens=512*20, final_tokens=200*len(pretrain_dataset)*block_size,
                           num_workers=4)
 
-    # Assuming 'pretrain_dataset' is an instance of CharCorruptionDataset for vocabulary
-    # Load fine-tuning data
+    # Load fine-tuning data and initialize NameDataset
     finetune_data = open(finetune_corpus_path, encoding='utf-8').read()
-    # Initialize NameDataset with fine-tuning data and pretraining dataset for vocabulary
     finetune_dataset = NameDataset(finetune_data, pretrain_dataset)
 
+    # Initialize the Trainer with the finetuning dataset
     trainer_obj = Trainer(model, finetune_dataset, None, tconf)
     # END CODE HERE
     return tconf, trainer_obj
@@ -102,6 +105,11 @@ def pretrain(pretrain_dataset, block_size, model, pretrain_lr=6e-3, writer=None)
     tconf = None  # TrainerConfig object (see trainer.py for more details)
 
     # START CODE HERE
+    tconf = TrainerConfig(max_epochs=650, batch_size=128, learning_rate=pretrain_lr, lr_decay=True,
+                          warmup_tokens=512*20, final_tokens=200*len(pretrain_dataset)*block_size,
+                          num_workers=4)
+
+    trainer_obj = Trainer(model, pretrain_dataset, None, tconf)
     # END CODE HERE
     return tconf, trainer_obj
 
