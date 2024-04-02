@@ -192,10 +192,14 @@ class CharCorruptionDataset(Dataset):
         start_idx = random.randint(0, len(document) - trunc_len)
         truncated_document = document[start_idx:start_idx+trunc_len]
         # 2.
-        masked_len = min(max(1, int(np.random.normal(
-            len(truncated_document)/4, 1, 1))), len(truncated_document) - 1)
+        avg_mask_len = int(len(truncated_document) * self.masking_percent)
+        lower_bound = max(1, avg_mask_len - int(avg_mask_len * 0.25))
+        upper_bound = min(len(truncated_document) - 1,
+                          avg_mask_len + int(avg_mask_len * 0.25))
+        masked_len = random.randint(lower_bound, upper_bound)
         start_idx_masked = random.randint(
             0, len(truncated_document) - masked_len)
+
         prefix = truncated_document[:start_idx_masked]
         masked_content = truncated_document[start_idx_masked:start_idx_masked+masked_len]
         suffix = truncated_document[start_idx_masked+masked_len:]
@@ -204,7 +208,7 @@ class CharCorruptionDataset(Dataset):
         masked_string = prefix + self.MASK_CHAR + suffix + \
             self.MASK_CHAR + masked_content + self.MASK_CHAR
         masked_string = masked_string + self.PAD_CHAR * \
-            (self.block_size - len(masked_string))
+            (self.block_size - (len(masked_string) - 1))
 
         # 4.
         x, y = masked_string[:-1], masked_string[1:]
